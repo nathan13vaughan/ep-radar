@@ -10,6 +10,13 @@ import { join } from "node:path";
 // extractJobs reads ads (setting, hours, times, salary, award level); researchCompany
 // web-searches employee reviews and the interview process.
 
+// Bump when the prompts or answer shapes change, so older answers are redone on the next check.
+export const AI_VERSION = 2;
+
+// Everything Claude writes here is read by someone skimming many ads, so it's asked for short
+// phrases rather than prose.
+const STYLE = `Write for someone skimming dozens of job ads: short, concrete phrases, not sentences. No filler, caveats or commentary. If something isn't known, use "" (or []) instead of explaining that it isn't known.`;
+
 // An empty working directory keeps any project CLAUDE.md or settings out of these calls.
 const WORKDIR = mkdtempSync(join(tmpdir(), "ep-radar-"));
 
@@ -88,12 +95,11 @@ const JOBS_SCHEMA = obj({ jobs: { type: "array", items: obj({ ref: str, ...JOB_F
 
 const COMPANY_SCHEMA = obj({
   verdict: { type: "string", enum: ["Positive", "Mixed", "Negative", "Not enough information"] },
-  summary: str,
+  headline: str,
   ratings: { type: "array", items: obj({ site: str, rating: str, review_count: str, url: str }) },
   pros: strList,
   cons: strList,
-  allied_health_notes: str,
-  interview: obj({ overview: str, stages: strList, common_questions: strList, timeline: str, tips: strList }),
+  interview: obj({ steps: strList, format: str, timeline: str, likely_questions: strList, tip: str }),
   sources: { type: "array", items: obj({ title: str, url: str }) },
 });
 
@@ -111,36 +117,58 @@ ${job.description || job.summary || "(no description available)"}
 </ad>`)
     .join("\n\n");
 
-  const prompt = `Below are ${jobs.length} job ads. An Exercise Physiologist is deciding which to apply for. For each ad, add one entry to "jobs" with its ref and these facts. Use "" (or []) when the ad doesn't say.
+  const prompt = `Below are ${jobs.length} job ads. An Exercise Physiologist is deciding which to apply for. For each ad, add one entry to "jobs" with its ref and these facts.
+
+${STYLE}
 
 - is_hospital_based: true only if the role is based in a hospital or run by a hospital/health service (inpatient wards, hospital outpatient clinics, rehab units, community teams of a public or private health service). False for private clinics, gyms, NDIS or mobile providers, aged care and corporate health, even if they mention hospitals.
-- workplace: the setting in a few words, e.g. "Public hospital – inpatient mental health unit".
-- employment_type: full time / part time / casual etc., and permanent vs fixed-term.
-- hours: FTE or hours per week/fortnight.
-- working_times: days, start and finish times, weekends, rosters or on-call.
-- contract: length and reason if fixed-term or temporary.
-- salary: pay as stated, including range, unit, super and salary packaging.
-- award_level: award or classification, e.g. "Health Professional Level 2".
-- key_requirements: up to 5 essential requirements.
-- summary: two plain sentences on what the job involves.
+- workplace: a few words, e.g. "Private hospital, mental health".
+- employment_type: e.g. "Part time, permanent" or "Casual".
+- hours: e.g. "0.6 FTE" or "38 hrs/week".
+- working_times: e.g. "Mon–Fri 8am–4:30pm" or "Rotating roster incl. weekends".
+- contract: e.g. "12 months, parental leave cover"; "" if permanent.
+- salary: e.g. "$45–$52/hr + super" or "$85k–$100k + super".
+- award_level: e.g. "Grade 2" or "Health Professional Level 2".
+- key_requirements: up to 4, each under 6 words, e.g. "ESSA accreditation", "Driver's licence".
+- summary: one sentence of at most 20 words on what the job actually involves.
 
 ${ads}`;
 
   const { jobs: results } = await askClaude(prompt, JOBS_SCHEMA, { model: cfg.ai.model, maxTurns: 4 });
-  const byRef = new Map(results.map(({ ref, ...fields }) => [String(ref), fields]));
+  const byRef = new Map(results.map(({ ref, ...fields }) => [String(ref), { ...fields, key_requirements: fields.key_requirements.slice(0, 4) }]));
   return jobs.map((_, i) => byRef.get(String(i)) ?? null);
 }
 
-export function researchCompany(company, location, cfg) {
+export async function researchCompany(company, location, cfg) {
   const prompt = `I'm an Exercise Physiologist in Melbourne, Australia, considering a job with "${company}" (${location}).
 
 Use web search, and fetch pages where useful, to find out:
-1. What employees say about working there: ratings and review counts on SEEK, Indeed and Glassdoor (Australian sites), and the common pros and cons. Look especially for comments from allied health staff (exercise physiologists, physios, OTs) about workload, management, culture, supervision and training, rostering and work-life balance.
-2. The interview and recruitment process for allied health roles there: application requirements (e.g. addressing selection criteria), interview format (panel, behavioural, clinical scenarios), common questions, referee and pre-employment checks, and how long it usually takes. For a public health service, the Victorian public health recruitment process applies, so include it.
+1. What employees say about working there: ratings on SEEK, Indeed and Glassdoor (Australian sites), and the most common praise and complaints, especially from allied health staff (exercise physiologists, physios, OTs).
+2. How it hires allied health staff: the steps, interview format, how long it takes, and typical questions. For a public health service, the Victorian public health recruitment process applies.
 
 If "${company}" is a recruitment agency or a parent brand, research the hospital or clinic it's hiring for if that's clear, otherwise the brand. About 4–6 searches is usually enough.
 
-Fill in every field: verdict, a two-sentence summary, ratings (only sites where you found an actual score: a short site name like "SEEK", "Indeed" or "Glassdoor", the rating exactly as shown, the review count, and the URL), pros, cons, allied_health_notes, interview (overview, stages, common_questions, timeline, tips) and up to 8 sources you relied on. Report only what you found, use "" or [] where you found nothing, and never estimate a rating.`;
+${STYLE}
 
-  return askClaude(prompt, COMPANY_SCHEMA, { model: cfg.ai.model, tools: ["WebSearch", "WebFetch"], maxTurns: 20, timeoutMs: 10 * 60000 });
+- verdict: Positive, Mixed, Negative, or "Not enough information".
+- headline: the single most useful takeaway, one sentence of at most 20 words, e.g. "Supportive team and good training, but high caseloads and slow pay progression."
+- ratings: only sites where you found an actual score, at most 3. Use a short site name ("SEEK", "Indeed", "Glassdoor"), the rating as a number (e.g. "4.1"), the review count as a number, and the URL. Never estimate a rating.
+- pros and cons: the 3 most common themes each, 2–6 words per item, e.g. "Flexible hours", "High caseload".
+- interview.steps: the hiring steps in order, at most 5, 2–6 words each, e.g. "Online application + cover letter", "Panel interview", "Reference checks".
+- interview.format: under 12 words, e.g. "Panel of 2–3; behavioural and clinical scenario questions".
+- interview.timeline: under 6 words, e.g. "About 2–4 weeks".
+- interview.likely_questions: up to 3, each under 15 words.
+- interview.tip: one sentence of at most 20 words.
+- sources: up to 5 pages you relied on.`;
+
+  const r = await askClaude(prompt, COMPANY_SCHEMA, { model: cfg.ai.model, tools: ["WebSearch", "WebFetch"], maxTurns: 20, timeoutMs: 10 * 60000 });
+  return {
+    ...r,
+    ratings: r.ratings.filter((x) => /\d/.test(x.rating)).slice(0, 3),
+    pros: r.pros.slice(0, 3),
+    cons: r.cons.slice(0, 3),
+    interview: { ...r.interview, steps: r.interview.steps.slice(0, 5), likely_questions: r.interview.likely_questions.slice(0, 3) },
+    sources: r.sources.slice(0, 5),
+    version: AI_VERSION,
+  };
 }

@@ -274,6 +274,58 @@
   .fine { display: flex; gap: 8px; margin: 26px 0 0; font-size: 12px; color: var(--ink-3); }
   .fine svg { width: 13px; height: 13px; margin-top: 2px; }
 
+  /* Scan-friendly detail sections */
+  .facts { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; margin: 18px 0 14px; }
+  .fact { padding: 10px 12px; border-radius: 12px; }
+  .fact .v { margin-top: 3px; font-size: 14px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .summary { font-size: 14.5px; line-height: 1.6; }
+  .block { margin-top: 22px; }
+  .needs { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 10px; }
+  .needs > span { margin-right: 2px; font-size: 11px; font-weight: 650; letter-spacing: .07em; text-transform: uppercase; color: var(--ink-3); }
+  .needs em { padding: 3px 9px; border-radius: 99px; border: 1px solid var(--line); background: var(--surface-2); font-size: 12.5px; font-style: normal; color: var(--ink-2); }
+  .rchips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+  .rchip { display: grid; gap: 5px; min-width: 112px; padding: 9px 12px; border-radius: 12px; border: 1px solid var(--line); background: var(--surface-2); transition: border-color .2s, transform .3s var(--spring); }
+  .rchip:hover { border-color: color-mix(in srgb, var(--iris) 60%, transparent); transform: translateY(-2px); }
+  .rchip-top { display: flex; align-items: baseline; gap: 4px; }
+  .rchip-top b { font-size: 17px; letter-spacing: -.02em; }
+  .rchip-star { font-size: 13px; color: var(--gold); }
+  .rchip-site { margin-left: 4px; font-size: 12.5px; font-weight: 600; color: var(--ink-2); }
+  .rbar { display: block; height: 4px; overflow: hidden; border-radius: 99px; background: var(--line-2); }
+  .rbar b { display: block; width: 0; height: 100%; border-radius: inherit; background: var(--accent-grad); transition: width 1.2s var(--ease) .15s; }
+  .rchip-count { font-size: 11.5px; color: var(--ink-3); }
+  .verdict-row { display: flex; align-items: flex-start; gap: 10px; }
+  .verdict-row .verdict { flex: none; margin: 1px 0 0; }
+  .verdict-row p { margin: 0; font-weight: 550; line-height: 1.5; }
+  .pc2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 6px 20px; margin-top: 12px; }
+  .pc2 ul { display: grid; gap: 6px; margin: 0; padding: 0; list-style: none; }
+  .pc2 li { display: flex; align-items: center; gap: 8px; font-size: 13.5px; color: var(--ink-2); }
+  .pc2 .pros svg { color: var(--green); }
+  .pc2 .cons svg { color: var(--rose); }
+  .soon { display: flex; align-items: center; gap: 8px; margin: 0; font-size: 13px; color: var(--ink-3); }
+  .soon svg { color: var(--iris); }
+  .quicklinks { display: flex; flex-wrap: wrap; gap: 4px 14px; margin-top: 12px; font-size: 12.5px; }
+  .quicklinks a { font-weight: 550; color: var(--iris); }
+  .quicklinks a:hover { text-decoration: underline; text-underline-offset: 3px; }
+  .steps { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+  .step { display: inline-flex; align-items: center; gap: 7px; padding: 5px 11px 5px 5px; border-radius: 99px; border: 1px solid var(--line); background: var(--surface-2); font-size: 13px; font-weight: 550; animation: rise .45s var(--ease) both; animation-delay: var(--d, 0ms); }
+  .step i { display: grid; place-items: center; width: 20px; height: 20px; border-radius: 50%; font-size: 11px; font-style: normal; font-weight: 700; color: #06080c; background: var(--accent-grad); }
+  .arr { color: var(--ink-3); }
+  .iv-meta { display: flex; flex-wrap: wrap; gap: 6px 16px; margin-top: 10px; font-size: 13px; color: var(--ink-2); }
+  .iv-meta span { display: inline-flex; align-items: center; gap: 6px; }
+  .iv-meta svg { width: 14px; height: 14px; color: var(--iris); }
+  .tip { display: flex; gap: 8px; margin: 10px 0 0; font-size: 13px; color: var(--ink-2); }
+  .tip svg { width: 14px; height: 14px; margin-top: 2px; color: var(--gold); }
+  .mini { margin-top: 10px; }
+  .mini summary { display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; font-weight: 600; color: var(--ink-2); list-style: none; cursor: pointer; }
+  .mini summary::-webkit-details-marker { display: none; }
+  .mini summary::after { content: "+"; color: var(--ink-3); }
+  .mini[open] summary::after { content: "−"; }
+  .mini summary:hover { color: var(--ink); }
+  .mini ul { display: grid; gap: 4px; margin: 8px 0 0; padding-left: 20px; font-size: 13px; color: var(--ink-2); }
+  .mini > a { display: block; margin-top: 6px; overflow: hidden; font-size: 12.5px; color: var(--iris); text-overflow: ellipsis; white-space: nowrap; }
+  .ad-mini { margin-top: 22px; padding-top: 14px; border-top: 1px solid var(--line); }
+  .ad-mini .adtext { margin-top: 10px; }
+
   /* Search now (GitHub) */
   [hidden] { display: none !important; }
   .refresh-btn { display: inline-flex; align-items: center; gap: 8px; height: 36px; padding: 0 14px 0 12px; border-radius: 10px; border: 1px solid var(--line); background: var(--surface); font-size: 13px; font-weight: 600; cursor: pointer; white-space: nowrap; transition: transform .3s var(--spring), border-color .2s, background .2s; }
@@ -660,47 +712,46 @@ function moveSegPill() {
 
 /* ---------- Detail ---------- */
 function fact(ic, label, value, note, delay) {
-  return `<div class="fact" style="--d:${delay}ms"><div class="k">${icon(ic)}${label}</div><div class="v${value ? "" : " muted"}">${esc(value || "Not stated in the ad")}</div>${note ? `<small>${esc(note)}</small>` : ""}</div>`;
+  return `<div class="fact" style="--d:${delay}ms"><div class="k">${icon(ic)}${label}</div><div class="v${value ? "" : " muted"}" title="${esc(value)}">${esc(value || "Not stated")}</div>${note ? `<small>${esc(note)}</small>` : ""}</div>`;
 }
-function stars(v) {
-  const full = Math.max(0, Math.min(5, Math.round(v)));
-  return `<span class="stars" aria-label="${v.toFixed(1)} out of 5">${"★".repeat(full)}<span>${"★".repeat(5 - full)}</span></span>`;
+// Compact rating: score, site, a star-bar that fills in, and the review count.
+function ratingChip(site, score, count, url) {
+  const pct = Math.max(0, Math.min(100, (Number(score) / 5) * 100));
+  return `<a class="rchip" href="${safeUrl(url)}" ${EXT}>
+    <span class="rchip-top"><b>${esc(score)}</b><span class="rchip-star">★</span><span class="rchip-site">${esc(site)}</span></span>
+    <i class="rbar"><b data-p="${pct}"></b></i>
+    ${count ? `<span class="rchip-count">${esc(count)} review${count === "1" ? "" : "s"}</span>` : ""}
+  </a>`;
 }
 function insightsBlock(j) {
   const r = j.research;
   const s = j.seekRating;
-  const ratings = [];
-  if (s) {
-    ratings.push(`<a class="ring-card" href="${safeUrl(s.url)}" ${EXT}>
-      <div class="ring"><svg viewBox="0 0 80 80"><circle class="track" cx="40" cy="40" r="34" pathLength="100"/><circle class="bar" cx="40" cy="40" r="34" pathLength="100" data-value="${s.value}"/></svg><span>${s.value.toFixed(1)}</span></div>
-      <div>${stars(s.value)}<div class="cap">${s.count} review${s.count === 1 ? "" : "s"} on Seek</div></div></a>`);
-  }
-  for (const x of r?.ratings ?? []) {
-    if (!/\d/.test(x.rating) || (s && /seek/i.test(x.site))) continue;
-    ratings.push(`<a class="rate-chip" href="${safeUrl(x.url)}" ${EXT}><b>${esc(x.rating)}</b><span>${esc(x.site)}${x.review_count ? ` · ${esc(x.review_count)} reviews` : ""}</span></a>`);
-  }
-  let body;
-  if (r) {
-    const tone = { Positive: "good", Mixed: "mixed", Negative: "bad" }[r.verdict] ?? "neutral";
-    const list = (items, ic) => (items.length ? items : ["Nothing specific found"]).map((p) => `<li>${icon(ic)}<span>${esc(p)}</span></li>`).join("");
-    body = `<p class="verdict-line"><span class="verdict ${tone}">${esc(r.verdict)}</span>${esc(r.summary)}</p>` +
-      (r.pros.length || r.cons.length ? `<div class="pc"><div class="pc-col pro"><h5>What people like</h5><ul>${list(r.pros, "check")}</ul></div><div class="pc-col con"><h5>Watch-outs</h5><ul>${list(r.cons, "minus")}</ul></div></div>` : "") +
-      (r.allied_health_notes ? `<p class="note">${icon("sparkle")}<span><b>From allied health staff:</b> ${esc(r.allied_health_notes)}</span></p>` : "");
-  } else {
-    body = `<div class="callout"><div class="spark">${icon("sparkle")}</div><div><b>Employer insights on the way</b><p>EP Radar uses your Claude subscription to research each employer's reviews and interview process. It works through a few employers every check, so this one will appear soon. If it never does, connect Claude (see the README). Until then, the links further down go straight to the reviews.</p></div></div>`;
-  }
-  return `<section class="block"><h4>${icon("star")}Employer insights</h4>${ratings.length ? `<div class="ratings">${ratings.join("")}</div>` : ""}${body}</section>`;
+  const chips = [];
+  if (s) chips.push(ratingChip("SEEK", s.value.toFixed(1), String(s.count), s.url));
+  for (const x of r?.ratings ?? []) if (!(s && /seek/i.test(x.site))) chips.push(ratingChip(x.site, x.rating, x.count, x.url));
+  const tone = { Positive: "good", Mixed: "mixed", Negative: "bad" }[r?.verdict] ?? "neutral";
+  const list = (items, ic) => items.map((p) => `<li>${icon(ic)}<span>${esc(p)}</span></li>`).join("");
+  const summary = r
+    ? `<div class="verdict-row"><span class="verdict ${tone}">${esc(r.verdict)}</span><p>${esc(r.headline)}</p></div>` +
+      (r.pros.length || r.cons.length ? `<div class="pc2">${r.pros.length ? `<ul class="pros">${list(r.pros, "check")}</ul>` : ""}${r.cons.length ? `<ul class="cons">${list(r.cons, "minus")}</ul>` : ""}</div>` : "")
+    : `<p class="soon">${icon("sparkle")}Review summary coming soon. A few employers are researched each check.</p>`;
+  return `<section class="block">
+    <h4>${icon("star")}Employer</h4>
+    ${chips.length ? `<div class="rchips">${chips.join("")}</div>` : ""}
+    ${summary}
+    <div class="quicklinks">${j.links.map((l) => `<a href="${safeUrl(l.url)}" ${EXT}>${esc(l.label)}</a>`).join("")}</div>
+    ${r?.sources.length ? `<details class="mini"><summary>Sources (${r.sources.length})</summary>${r.sources.map((x) => `<a href="${safeUrl(x.url)}" ${EXT}>${esc(x.title || x.url)}</a>`).join("")}</details>` : ""}
+  </section>`;
 }
 function interviewBlock(r) {
-  const iv = r?.interview;
-  if (!iv || !(iv.overview || iv.stages.length)) return "";
-  const acc = (title, items) => (items.length ? `<details class="acc"><summary>${icon("chev")}${title}<b>${items.length}</b></summary><ul>${items.map((x) => `<li>${esc(x)}</li>`).join("")}</ul></details>` : "");
-  return `<section class="block"><h4>${icon("mic")}Interview process</h4>
-    ${iv.overview ? `<p class="summary">${esc(iv.overview)}</p>` : ""}
-    ${iv.stages.length ? `<ol class="timeline">${iv.stages.map((s, i) => `<li style="--d:${i * 90}ms">${esc(s)}</li>`).join("")}</ol>` : ""}
-    ${iv.timeline ? `<p class="note">${icon("clock")}<span><b>How long it takes:</b> ${esc(iv.timeline)}</span></p>` : ""}
-    ${acc("Questions people were asked", iv.common_questions)}
-    ${acc("Tips from candidates", iv.tips)}
+  if (!r || !(r.steps.length || r.format || r.timeline)) return "";
+  const meta = [r.format && `<span>${icon("mic")}${esc(r.format)}</span>`, r.timeline && `<span>${icon("clock")}${esc(r.timeline)}</span>`].filter(Boolean).join("");
+  return `<section class="block">
+    <h4>${icon("mic")}Interview</h4>
+    ${r.steps.length ? `<div class="steps">${r.steps.map((s, i) => `<span class="step" style="--d:${i * 70}ms"><i>${i + 1}</i>${esc(s)}</span>`).join('<span class="arr">›</span>')}</div>` : ""}
+    ${meta ? `<div class="iv-meta">${meta}</div>` : ""}
+    ${r.tip ? `<p class="tip">${icon("sparkle")}<span>${esc(r.tip)}</span></p>` : ""}
+    ${r.questions.length ? `<details class="mini"><summary>Likely questions (${r.questions.length})</summary><ul>${r.questions.map((q) => `<li>${esc(q)}</li>`).join("")}</ul></details>` : ""}
   </section>`;
 }
 function renderDetail(j) {
@@ -742,19 +793,16 @@ function renderDetail(j) {
     <div class="d-body">
       <div class="facts">${facts}</div>
       ${j.summary ? `<p class="summary">${esc(j.summary)}</p>` : ""}
+      ${j.requirements.length ? `<div class="needs"><span>Needs</span>${j.requirements.map((r) => `<em>${esc(r)}</em>`).join("")}</div>` : ""}
       ${insightsBlock(j)}
       ${interviewBlock(j.research)}
-      ${j.requirements.length ? `<section class="block"><h4>${icon("list")}Key requirements</h4><ul class="reqs">${j.requirements.map((r, i) => `<li style="--d:${i * 50}ms">${icon("check")}<span>${esc(r)}</span></li>`).join("")}</ul></section>` : ""}
-      <section class="block"><h4>${icon("file")}Full ad</h4><div class="adtext">${esc(j.description || "No description was captured for this listing.")}</div><button class="btn ghost" data-ad>${icon("chev")}<span>Show the whole ad</span></button></section>
-      <section class="block"><h4>${icon("link")}Research this employer</h4><div class="linkrow">${j.links.map((l) => `<a class="pill" href="${safeUrl(l.url)}" ${EXT}>${esc(l.label)}${icon("external")}</a>`).join("")}</div></section>
+      <details class="mini ad-mini"><summary>${icon("file")}Full ad</summary><div class="adtext open">${esc(j.description || "No description was captured for this listing.")}</div></details>
       ${j.hospitalReasons.length ? `<p class="fine">${icon("hospital")}<span>Why it's tagged hospital: ${esc(j.hospitalReasons.join("; "))}</span></p>` : ""}
     </div>`;
 
   el.scrollTop = 0;
-  const ad = $(".adtext", el);
-  if (ad.scrollHeight <= ad.clientHeight + 4) { ad.classList.add("open"); $("[data-ad]", el).remove(); }
   requestAnimationFrame(() => requestAnimationFrame(() => {
-    $$(".ring .bar", el).forEach((bar) => { bar.style.strokeDashoffset = String(100 - (Number(bar.dataset.value) / 5) * 100); });
+    $$(".rbar b", el).forEach((bar) => { bar.style.width = bar.dataset.p + "%"; });
   }));
   if (!reduceMotion) {
     $(".d-hero", el).animate([{ opacity: 0, transform: "translateY(10px)" }, { opacity: 1, transform: "none" }], { duration: 420, easing: "cubic-bezier(.2,.7,.2,1)" });
@@ -829,13 +877,6 @@ document.addEventListener("click", (e) => {
   if (t.closest("[data-toast-act]")) return toastAction?.();
   if (t.closest("[data-clear]")) return clearFilters();
   if (t.closest("[data-close]") || t.closest("#scrim")) return closeSheet();
-  const adBtn = t.closest("[data-ad]");
-  if (adBtn) {
-    const open = adBtn.previousElementSibling.classList.toggle("open");
-    adBtn.querySelector("span").textContent = open ? "Show less" : "Show the whole ad";
-    adBtn.classList.toggle("flip", open);
-    return;
-  }
   const c = t.closest(".card");
   if (c) select(c.dataset.id);
 });

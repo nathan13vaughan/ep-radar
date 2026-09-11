@@ -49,6 +49,42 @@ function workTypeFromText(text = "") {
   return [...found.values()].slice(0, 3).join(", ");
 }
 
+// Scan-friendly view of an employer's research: a headline, up to 3 pros/cons/ratings and a short
+// interview outline. Also tidies records saved by the first version, which had longer free text.
+function insights(r) {
+  if (!r) return null;
+  const iv = r.interview ?? {};
+  const firstSentence = (s = "") => s.split(/(?<=[.!?])\s/)[0];
+  // Answers from before AI_VERSION 2 were long sentences; keep just their lead phrase until they're redone.
+  const old = !r.version;
+  const shorten = (s = "", max) => {
+    const lead = old ? s.split(/\s+[—–-]\s+|;|\s\(|:\s/)[0].trim() : s;
+    return lead.length <= max ? lead : `${lead.slice(0, lead.lastIndexOf(" ", max)).replace(/[,.]$/, "")}…`;
+  };
+  const shortList = (items, n, max) => (items ?? []).slice(0, n).map((s) => shorten(s, max));
+  return {
+    verdict: r.verdict,
+    headline: shorten(r.headline || firstSentence(r.summary), 160),
+    ratings: (r.ratings ?? [])
+      .filter((x) => /\d/.test(x.rating))
+      .slice(0, 3)
+      .map((x) => ({
+        site: x.site.replace(/\s*\(.*$/, "").trim(),
+        rating: x.rating.match(/\d+(?:\.\d+)?/)[0],
+        count: String(x.review_count).match(/\d[\d,]*/)?.[0] ?? "",
+        url: x.url,
+      })),
+    pros: shortList(r.pros, 3, 60),
+    cons: shortList(r.cons, 3, 60),
+    steps: shortList(iv.steps ?? iv.stages, 5, 48),
+    format: shorten(iv.format ?? "", 90),
+    timeline: shorten(iv.timeline ?? "", 60),
+    questions: shortList(iv.likely_questions ?? iv.common_questions, 3, 120),
+    tip: shorten(iv.tip ?? iv.tips?.[0] ?? "", 160),
+    sources: (r.sources ?? []).slice(0, 5),
+  };
+}
+
 function toCard(job, research) {
   const ai = job.ai ?? {};
   const x = job.extracted ?? {};
@@ -77,10 +113,10 @@ function toCard(job, research) {
     contract: ai.contract || x.contract || "",
     award: ai.award_level || x.award || "",
     summary: ai.summary || job.summary || "",
-    requirements: ai.key_requirements ?? [],
+    requirements: (ai.key_requirements ?? []).slice(0, 4),
     description: job.description ?? "",
     seekRating: job.rating ?? null,
-    research: research ?? null,
+    research: insights(research),
     links: [
       seekReviews && { label: "Seek reviews", url: seekReviews },
       job.companyPage

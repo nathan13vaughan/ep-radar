@@ -10,7 +10,7 @@ import { openDb } from "./db.js";
 import { broadTitleMatch, companyKey, dedupeKey, hospitalScore, mentionsEp, sameRole, titleMatches } from "./filter.js";
 import { extractDetails } from "./extract.js";
 import { htmlToText } from "./text.js";
-import { aiAvailable, extractJobs, isFatalAiError, researchCompany } from "./research.js";
+import { AI_VERSION, aiAvailable, extractJobs, isFatalAiError, researchCompany } from "./research.js";
 import { notifyJobs, send } from "./notify.js";
 import { writeReport } from "./report.js";
 import { sleep } from "./http.js";
@@ -113,7 +113,7 @@ async function runOnce(db) {
   // 2. Let Claude read the ads (new ones first, then any open ones it hasn't read yet): confirms
   //    hospital-based and pulls out hours, times and pay. Several ads per call, a few calls at once.
   if (useAi) {
-    const queue = [...fresh, ...known.filter((j) => !j.ai)]
+    const queue = [...fresh, ...known.filter((j) => j.aiVersion !== AI_VERSION)]
       .filter((j) => !j.excluded && (!cfg.hospitalOnly || j.hospitalScore > 0))
       .slice(0, cfg.ai.maxJobsPerRun);
     if (queue.length) log(`Reading ${queue.length} ad(s) with Claude`);
@@ -124,6 +124,7 @@ async function runOnce(db) {
         batch.forEach((job, i) => {
           if (!results[i]) return;
           job.ai = results[i];
+          job.aiVersion = AI_VERSION;
           job.isHospital = results[i].is_hospital_based;
         });
       } catch (err) {
@@ -145,7 +146,8 @@ async function runOnce(db) {
     }
     const due = [...employers].filter(([key]) => {
       const cached = db.getCompany(key);
-      return !cached || Date.now() - Date.parse(cached.researchedAt) > cfg.ai.companyCacheDays * 864e5;
+      const stale = Date.now() - Date.parse(cached?.researchedAt) > cfg.ai.companyCacheDays * 864e5;
+      return !cached || cached.version !== AI_VERSION || stale;
     });
     await mapLimit(due.slice(0, cfg.ai.maxCompaniesPerRun), cfg.ai.parallelCalls, async ([key, job]) => {
       if (!useAi) return;
