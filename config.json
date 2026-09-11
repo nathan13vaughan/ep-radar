@@ -1,0 +1,102 @@
+{
+  "location": {
+    "seek": "Melbourne VIC",
+    "indeed": "Melbourne VIC",
+    "linkedin": "Melbourne, Victoria, Australia"
+  },
+  "radiusKm": 50,
+  "maxAgeDays": 60,
+  "checkEveryMinutes": 120,
+
+  "searchTerms": [
+    "exercise physiologist",
+    "exercise physiology",
+    "accredited exercise physiologist",
+    "clinical exercise physiologist",
+    "exercise physiologist hospital",
+    "exercise physiologist inpatient",
+    "exercise physiologist grade 1",
+    "exercise physiologist grade 2",
+    "graduate exercise physiologist",
+    "physiotherapist or exercise physiologist",
+    "allied health exercise physiologist",
+    "cardiac rehabilitation",
+    "pulmonary rehabilitation"
+  ],
+  "titleKeywords": [
+    "exercise physiolog",
+    "cardiac rehab",
+    "pulmonary rehab",
+    "cardiopulmonary rehab"
+  ],
+  "broadTitleKeywords": [
+    "allied health clinician",
+    "allied health professional",
+    "rehabilitation clinician",
+    "community rehabilitation",
+    "rehab clinician"
+  ],
+  "titleExclude": [
+    "student", "volunteer", "placement", "lecturer", "relocation", "interstate",
+    "sydney", "canberra", "brisbane", "perth", "adelaide", "hobart", "darwin", "gold coast",
+    "tasmania", "launceston", "devonport", "queensland", "nsw", "geelong", "ballarat", "bendigo"
+  ],
+  "titleExcludeUnlessEp": ["nurse", "sales"],
+
+  "hospitalOnly": false,
+  "hospitalScoreThreshold": 2,
+  "hospitalEmployers": [
+    "Bayside Health", "Alfred Health", "Monash Health", "Austin Health", "Eastern Health", "Western Health",
+    "Northern Health", "Peninsula Health", "Melbourne Health", "Royal Melbourne", "Royal Children's",
+    "Royal Women's", "Peter MacCallum", "St Vincent", "Mercy Health", "Werribee Mercy", "Epworth",
+    "Cabrini", "Calvary", "Healthscope", "Ramsay Health", "St John of God", "Victorian Government",
+    "Donvale Rehabilitation", "Holmesglen Private", "Knox Private", "Warringal Private", "Masada Private",
+    "The Avenue Hospital", "Glenferrie Private", "Beleura Private", "Peninsula Private", "Linacre",
+    "Mitcham Private", "Waverley Private", "Delmont Private", "The Victoria Clinic", "Albert Road Clinic",
+    "The Melbourne Clinic", "Wyndham Clinic", "Northpark Private", "John Fawkner", "Frances Perry",
+    "Djerriwarrh Health", "Kilmore District Health", "Bass Coast Health", "Dental Health Services Victoria",
+    "Queensland Health", "NSW Health", "SA Health", "WA Health", "Canberra Health Services", "Tasmanian Health"
+  ],
+
+  "sources": { "seek": true, "indeed": true, "linkedin": true, "careers": true },
+  "careerSites": [
+    { "name": "Bayside Health (Alfred)", "type": "livehire", "host": "careers.alfredhealth.org.au" },
+    { "name": "Bayside Health (Peninsula)", "type": "successfactors-v1", "host": "careers.peninsulahealth.org.au" },
+    { "name": "Monash Health", "type": "successfactors", "host": "careers.monashhealth.org" },
+    { "name": "Eastern Health", "type": "successfactors", "host": "careers.easternhealth.org.au" },
+    { "name": "Western Health", "type": "successfactors", "host": "careers.wh.org.au" },
+    { "name": "Austin Health", "type": "successfactors", "host": "careers.austin.org.au" },
+    { "name": "Royal Children's Hospital", "type": "successfactors", "host": "careers.rch.org.au" },
+    { "name": "Peter MacCallum Cancer Centre", "type": "successfactors", "host": "careers.petermac.org" },
+    { "name": "Royal Melbourne Hospital", "type": "successfactors-v1", "host": "careers.thermh.org.au" },
+    { "name": "Royal Women's Hospital", "type": "successfactors-v1", "host": "careers.thewomens.org.au" },
+    { "name": "Northern Health", "type": "successfactors-xml", "company": "northernhe" },
+    { "name": "St Vincent's Hospital Melbourne", "type": "workday", "host": "svha.wd3.myworkdayjobs.com", "tenant": "svha", "site": "SVHA_SVHA",
+      "facets": { "hiringCompany": ["e5449715676d01e5efa9dc26d349b20b", "e5449715676d01ea5193c726d3498a0b"] } },
+    { "name": "Cabrini", "type": "workday", "host": "cabrini.wd3.myworkdayjobs.com", "tenant": "cabrini", "site": "Cabrini" },
+    { "name": "Mercy Health", "type": "workday", "host": "mercyagedcare.wd105.myworkdayjobs.com", "tenant": "mercyagedcare", "site": "External" },
+    { "name": "Epworth HealthCare", "type": "smartrecruiters", "company": "Epworth" },
+    { "name": "Ramsay Health Care", "type": "smartrecruiters", "company": "RamsayHealthCare1", "query": "region=Victoria" },
+    { "name": "Calvary Health Care", "type": "pageup", "instance": "1106", "locationMatch": "caulfield|kooyong|melbourne|bethlehem|\\bVIC\\b" },
+    { "name": "Healthscope", "type": "taleo", "host": "careers.healthscope.com.au", "keywords": ["exercise physiologist", "exercise physiology"], "locationMatch": "melbourne|\\bVIC\\b|victoria" },
+    { "name": "Careers.Vic", "type": "careersvic", "keywords": ["exercise physiologist", "exercise physiology"], "locationMatch": "melbourne" }
+  ],
+  "pagesPerSearch": 5,
+  "requestDelayMs": 800,
+
+  "notifications": {
+    "desktop": true,
+    "ntfyTopic": "",
+    "ntfyServer": "https://ntfy.sh"
+  },
+
+  "ai": {
+    "enabled": true,
+    "model": "opus",
+    "companyCacheDays": 30,
+    "maxJobsPerRun": 40,
+    "adsPerCall": 6,
+    "maxCompaniesPerRun": 6,
+    "parallelCalls": 3
+  }
+}

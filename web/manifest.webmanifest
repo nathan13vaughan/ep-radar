@@ -1,0 +1,11 @@
+{
+  "name": "EP Radar",
+  "short_name": "EP Radar",
+  "description": "Exercise Physiologist jobs in Melbourne",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#06080c",
+  "theme_color": "#06080c",
+  "icons": [{ "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }]
+}

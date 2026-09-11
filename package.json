@@ -1,0 +1,17 @@
+{
+  "name": "ep-job-observer",
+  "version": "1.0.0",
+  "description": "Watches Seek, Indeed and LinkedIn for hospital-based Exercise Physiologist jobs and notifies you.",
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "check": "node --disable-warning=ExperimentalWarning src/index.js --open",
+    "watch": "node --disable-warning=ExperimentalWarning src/index.js --watch",
+    "report": "node --disable-warning=ExperimentalWarning src/index.js --report-only --open",
+    "test-notify": "node --disable-warning=ExperimentalWarning src/index.js --test-notify"
+  },
+  "engines": {
+    "node": ">=22.13"
+  },
+  "license": "ISC"
+}
