@@ -140,7 +140,7 @@ Use web search, and fetch pages where useful, to find out:
 
 If "${company}" is a recruitment agency or a parent brand, research the hospital or clinic it's hiring for if that's clear, otherwise the brand. About 4–6 searches is usually enough.
 
-Fill in every field: verdict, a two-sentence summary, ratings (site, the rating exactly as shown, review count, URL), pros, cons, allied_health_notes, interview (overview, stages, common_questions, timeline, tips) and up to 8 sources you relied on. Report only what you found, use "" or [] where you found nothing, and never estimate a rating.`;
+Fill in every field: verdict, a two-sentence summary, ratings (only sites where you found an actual score: a short site name like "SEEK", "Indeed" or "Glassdoor", the rating exactly as shown, the review count, and the URL), pros, cons, allied_health_notes, interview (overview, stages, common_questions, timeline, tips) and up to 8 sources you relied on. Report only what you found, use "" or [] where you found nothing, and never estimate a rating.`;
 
   return askClaude(prompt, COMPANY_SCHEMA, { model: cfg.ai.model, tools: ["WebSearch", "WebFetch"], maxTurns: 20, timeoutMs: 10 * 60000 });
 }

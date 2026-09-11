@@ -676,7 +676,7 @@ function insightsBlock(j) {
       <div>${stars(s.value)}<div class="cap">${s.count} review${s.count === 1 ? "" : "s"} on Seek</div></div></a>`);
   }
   for (const x of r?.ratings ?? []) {
-    if (s && /seek/i.test(x.site)) continue;
+    if (!/\d/.test(x.rating) || (s && /seek/i.test(x.site))) continue;
     ratings.push(`<a class="rate-chip" href="${safeUrl(x.url)}" ${EXT}><b>${esc(x.rating)}</b><span>${esc(x.site)}${x.review_count ? ` · ${esc(x.review_count)} reviews` : ""}</span></a>`);
   }
   let body;
