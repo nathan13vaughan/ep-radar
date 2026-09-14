@@ -238,8 +238,7 @@ async function main() {
         .filter((c) => c.enabled !== false)
         .map(({ id, label, short, plural, color }) => ({ id, label, short, plural, color })),
       careerSites: cfg.sources.careers ? cfg.careerSites.length : 0,
-      repo: process.env.GITHUB_REPOSITORY, // set by GitHub Actions
-      branch: process.env.GITHUB_REF_NAME,
+      checkEveryMinutes: cfg.checkEveryMinutes,
     });
     log(`Report updated: ${REPORT_PATH}`);
   };

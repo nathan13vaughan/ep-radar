@@ -133,8 +133,8 @@ function toCard(job, research) {
   };
 }
 
-// meta: { city, careerSites } for the headline; { repo, branch } when published from GitHub,
-// which turns on the report's "Search now" button.
+// meta: { city, careerSites, categories, home } for the page; checkEveryMinutes says when the
+// Refresh button can expect the next update.
 export function writeReport(file, jobs, companies, meta = {}) {
   const cards = groupJobs(jobs.filter((j) => !j.excluded)).map((job) => toCard(job, companies[companyKey(job.company)]));
   const data = JSON.stringify({
@@ -143,9 +143,7 @@ export function writeReport(file, jobs, companies, meta = {}) {
     careerSites: meta.careerSites ?? 0,
     categories: meta.categories ?? [],
     home: meta.home ?? null,
-    repo: meta.repo ?? "",
-    branch: meta.branch ?? "",
-    workflow: "check-jobs.yml",
+    checkEveryMinutes: meta.checkEveryMinutes ?? 120,
     jobs: cards,
   });
   writeFileSync(file, TEMPLATE.replace("__DATA__", () => data.replace(/</g, "\\u003c")));

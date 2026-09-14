@@ -68,13 +68,7 @@ Remove it with `scripts\uninstall-task.ps1`. The log is at `logs\observer.log`.
 
 The report is then at `https://<your-username>.github.io/<repo-name>/`. On your phone, use **Add to Home Screen** to open it like an app.
 
-To search right away instead of waiting for the next scheduled check, tap **Search now** in the report. It either links to GitHub's **Run workflow** button, or with one-time setup starts the search itself.
-
-For one-tap search, create a fine-grained GitHub token with:
-- **Repository access:** this repo only.
-- **Permissions:** Actions → Read and write.
-
-Paste it into the report once. It's kept only in that browser, and all it can do is start this repo's search. The report shows the search's progress and reloads itself when the new results are published. Desktop pop-up notifications only work on Windows, so on GitHub, alerts come through ntfy. GitHub pauses scheduled runs if a repository has had no activity for 60 days; if that happens, re-enable the workflow on the Actions tab.
+The report's **Refresh** button loads the newest results GitHub has published, or tells you when the next check is due. No setup is needed. To run a check straight away, use **Run workflow** on the repo's Actions tab. Desktop pop-up notifications only work on Windows, so on GitHub, alerts come through ntfy. GitHub pauses scheduled runs if a repository has had no activity for 60 days; if that happens, re-enable the workflow on the Actions tab.
 
 **Option C: leave a terminal open**
 
