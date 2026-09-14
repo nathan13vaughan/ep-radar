@@ -1,6 +1,6 @@
 # EP Job Observer
 
-Watches **Seek**, **Indeed** and **LinkedIn** for Exercise Physiologist roles in **Melbourne**, notifies you when a new one appears, and keeps a report with everything you'd want to know before applying. Hospital-based roles are tagged so they're easy to spot.
+Watches **Seek**, **Indeed**, **LinkedIn** and Melbourne hospitals' own careers sites for **Exercise Physiology, Occupational Therapy, Exercise Science and Pilates** roles in **Melbourne**. It notifies you when a new one appears and keeps a report with everything you'd want to know before applying. Each role is tagged with its category, and the report has a tab for each one. Hospital-based roles are tagged too.
 
 For each role you get:
 
@@ -96,9 +96,15 @@ Flags for `node src/index.js`: `--watch`, `--open`, `--report-only`, `--no-notif
 ## Settings (`config.json`)
 
 - `location`: where to search, written the way each site expects: `Melbourne VIC` for Seek and Indeed, and `Melbourne, Victoria, Australia` for LinkedIn. `radiusKm` sets the search distance on Indeed and LinkedIn.
-- `searchTerms`: what's searched on each site.
-- `titleKeywords` / `titleExclude`: which job titles count as EP roles. `titleExclude` also drops ads for other cities that are posted under "Melbourne" (e.g. "Relocation Opportunity to Canberra"). `titleExcludeUnlessEp` words, such as "nurse", only drop a title when it doesn't also say Exercise Physiologist.
-- `broadTitleKeywords`: generic titles (e.g. "Allied Health Clinician") that are opened and kept only if the ad mentions exercise physiology.
+- `categories`: the kinds of role to find: Exercise Physiology, Occupational Therapy, Exercise Science and Pilates. Each has:
+  - `searchTerms`: what's searched on each site;
+  - `titlePatterns`: which job titles belong to it (regular expressions, so `\\bOTs?\\b` matches "OT" as a word);
+  - `mentionPatterns`: what an ad must say for a generic title to count;
+  - a `label`, a short tag and a `color` for the report.
+
+  Set `"enabled": false` on a category to stop searching for it, or copy one to add another role type (e.g. Physiotherapy).
+- `titleExclude`: titles to drop. It also drops ads for other cities that are posted under "Melbourne" (e.g. "Relocation Opportunity to Canberra"). `titleExcludeUnlessRole` words, such as "nurse", only drop a title when it doesn't also name one of the roles outright.
+- `broadTitleKeywords`: generic titles (e.g. "Allied Health Clinician") that are opened and kept only if the ad names one of the roles.
 - `hospitalOnly`: set to `true` to be notified only about hospital-based roles (off by default).
 - `hospitalEmployers`: employer names always treated as hospitals (add your local health service).
 - `hospitalScoreThreshold`: how much evidence the keyword check needs before calling a role hospital-based when AI is off.

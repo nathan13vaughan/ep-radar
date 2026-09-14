@@ -54,9 +54,10 @@ export async function notifyJobs(cfg, jobs, reportUrl) {
   const individual = jobs.slice(0, 3);
   for (const job of individual) {
     const pay = [job.salary || job.ai?.salary, job.workType || job.ai?.employment_type].filter(Boolean).join(" · ");
-    const tag = job.isHospital ? "New hospital EP job" : "New EP job";
+    const category = cfg.categories.find((c) => c.id === job.categories?.[0]);
+    const tag = ["New", job.isHospital && "hospital", category?.short, "job"].filter(Boolean).join(" ");
     await send(cfg, `${tag}: ${job.title}`,[`${job.company} · ${job.location}`, pay], job.url);
   }
   const rest = jobs.length - individual.length;
-  if (rest > 0) await send(cfg, `${rest} more new EP job${rest === 1 ? "" : "s"}`, ["Open the report to see them all."], reportUrl);
+  if (rest > 0) await send(cfg, `${rest} more new job${rest === 1 ? "" : "s"}`, ["Open the report to see them all."], reportUrl);
 }

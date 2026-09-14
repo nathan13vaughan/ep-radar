@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>EP Radar · Exercise Physiologist jobs</title>
+<title>EP Radar · Allied health & exercise jobs</title>
 <!-- Lets the published site be added to a phone's home screen like an app. -->
 <meta name="theme-color" content="#06080c">
 <meta name="mobile-web-app-capable" content="yes">
@@ -274,6 +274,19 @@
   .fine { display: flex; gap: 8px; margin: 26px 0 0; font-size: 12px; color: var(--ink-3); }
   .fine svg { width: 13px; height: 13px; margin-top: 2px; }
 
+  /* Role categories */
+  .cats { flex-basis: 100%; display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; }
+  .cats::-webkit-scrollbar { display: none; }
+  .cat { display: inline-flex; align-items: center; gap: 8px; height: 38px; padding: 0 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--surface); font-size: 13.5px; font-weight: 600; color: var(--ink-2); white-space: nowrap; cursor: pointer; transition: color .2s, border-color .25s, background .25s, transform .3s var(--spring); }
+  .cat i { width: 8px; height: 8px; border-radius: 50%; background: var(--c, var(--ink-3)); box-shadow: 0 0 0 3px color-mix(in srgb, var(--c, var(--ink-3)) 22%, transparent); }
+  .cat[data-cat=""] i { background: var(--accent-grad); box-shadow: none; }
+  .cat b { font-size: 11.5px; font-weight: 600; color: var(--ink-3); }
+  .cat:hover { color: var(--ink); border-color: var(--line-2); }
+  .cat:active { transform: scale(.97); }
+  .cat.active { color: var(--ink); border-color: color-mix(in srgb, var(--c, var(--iris)) 65%, transparent); background: color-mix(in srgb, var(--c, var(--iris)) 14%, transparent); }
+  .tag.cat-tag { color: var(--c); border-color: color-mix(in srgb, var(--c) 40%, transparent); background: color-mix(in srgb, var(--c) 11%, transparent); }
+  :root[data-theme="light"] .tag.cat-tag { color: color-mix(in srgb, var(--c) 70%, #000); }
+
   /* Scan-friendly detail sections */
   .facts { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; margin: 18px 0 14px; }
   .fact { padding: 10px 12px; border-radius: 12px; }
@@ -470,6 +483,7 @@
 
 <div id="sentinel"></div>
 <div class="toolbar" id="toolbar">
+  <div class="cats" id="cats" role="group" aria-label="Role type"></div>
   <label class="search"><svg class="i" aria-hidden="true"><use href="#i-search"/></svg><input id="q" type="search" placeholder="Search roles, employers or suburbs" autocomplete="off" aria-label="Search roles"><kbd>/</kbd></label>
   <div class="seg" id="seg" role="group" aria-label="Work type">
     <span class="seg-pill" aria-hidden="true"></span>
@@ -578,10 +592,16 @@ const state = { q: "", type: "", flags: new Set(), sort: "newest", selected: nul
 const saved = new Set(store.get("saved", []));
 const applied = new Set(store.get("applied", []));
 const byId = new Map(DATA.jobs.map((j) => [j.id, j]));
+const CATS = DATA.categories ?? [];
+const catById = new Map(CATS.map((c) => [c.id, c]));
+state.cat = catById.has(store.get("cat", "")) ? store.get("cat", "") : "";
+const catTags = (j) => (j.categories ?? []).map((id) => catById.get(id)).filter(Boolean)
+  .map((c) => `<span class="tag cat-tag" style="--c:${c.color}">${esc(c.short)}</span>`).join("");
 
-function passesFilters(j) {
+function passesFilters(j, ignoreCategory = false) {
   const q = state.q.trim().toLowerCase();
-  return (state.flags.has("closed") || isOpen(j)) &&
+  return (ignoreCategory || !state.cat || (j.categories ?? []).includes(state.cat)) &&
+    (state.flags.has("closed") || isOpen(j)) &&
     (!state.flags.has("hospital") || j.isHospital) &&
     (!state.flags.has("new") || isNew(j)) &&
     (!state.flags.has("saved") || saved.has(j.id)) &&
@@ -621,15 +641,20 @@ const GROUPS = [
 ];
 const groupOf = (name) => (["Seek", "Indeed", "LinkedIn"].includes(name) ? name : "Hospital sites");
 
+// Headline, stats and source bar for the selected category (or all of them).
 function renderHero() {
-  const open = DATA.jobs.filter(isOpen);
+  const cat = catById.get(state.cat);
+  const open = DATA.jobs.filter((j) => isOpen(j) && (!cat || (j.categories ?? []).includes(cat.id)));
   const city = DATA.city || "Melbourne";
   $("#h-city").textContent = city;
   $("#brand-city").textContent = city;
-  $("#h-noun").textContent = open.length === 1 ? "Exercise Physiologist role" : "Exercise Physiologist roles";
+  const plural = cat?.plural ?? (CATS.length > 1 ? "allied health & exercise roles" : "Exercise Physiologist roles");
+  $("#h-noun").textContent = open.length === 1 ? plural.replace(/roles$/, "role") : plural;
   countUp($("#h-count"), open.length, undefined, 150);
   const sites = DATA.careerSites ? ` and ${DATA.careerSites} hospital careers sites` : "";
-  $("#lede").textContent = `Every EP role on Seek, Indeed, LinkedIn${sites}, in one place. Duplicates are merged, and each role shows its pay, hours and what it's like to work there.`;
+  const labels = cat ? [cat.label] : CATS.map((c) => c.label);
+  const kinds = labels.length > 1 ? `${labels.slice(0, -1).join(", ")} and ${labels.at(-1)}` : labels[0] ?? "EP";
+  $("#lede").textContent = `Every ${kinds} role on Seek, Indeed, LinkedIn${sites}, in one place. Duplicates are merged, and each role shows its pay, hours and what it's like to work there.`;
 
   const salaries = open.map((j) => j.salaryAnnual).filter(Boolean);
   const tiles = [
@@ -650,6 +675,7 @@ function renderHero() {
   const counts = Object.fromEntries(GROUPS.map((g) => [g.key, 0]));
   for (const j of open) for (const g of new Set(j.sources.map((s) => groupOf(s.name)))) counts[g]++;
   const total = Object.values(counts).reduce((a, b) => a + b, 0) || 1;
+  $("#srcbar").classList.remove("go");
   $("#srcbar").innerHTML = GROUPS.filter((g) => counts[g.key]).map((g) => `<span style="--w:${(counts[g.key] / total) * 100}%;background:${g.color}" title="${g.key}: ${counts[g.key]}"></span>`).join("");
   $("#legend").innerHTML = GROUPS.map((g) => `<span><i style="background:${g.color}"></i>${g.key}<b>${counts[g.key]}</b></span>`).join("") + '<span class="legend-note">roles found on each source</span>';
   setTimeout(() => $("#srcbar").classList.add("go"), reduceMotion ? 0 : 750);
@@ -661,7 +687,7 @@ function renderLive() {
 
 /* ---------- List ---------- */
 function card(j, i) {
-  const tags = [];
+  const tags = [catTags(j)];
   if (isNew(j)) tags.push('<span class="tag new">New</span>');
   if (j.isHospital) tags.push(`<span class="tag hosp">${icon("hospital")}Hospital</span>`);
   if (j.salary && j.salaryAnnual) tags.push(`<span class="tag money">${esc(shortSalary(j))}</span>`);
@@ -696,7 +722,25 @@ function renderList() {
     : `<div class="empty">${radar()}<h3>No roles match</h3><p>Nothing fits these filters right now. New roles are checked for every couple of hours.</p><button class="btn" data-clear>Clear filters</button>${DATA.repo ? `<button class="btn" data-refresh>${icon("refresh")}Search now</button>` : ""}</div>`;
   if (!isMobile()) renderDetail(byId.get(state.selected));
   renderSegCounts();
+  renderCats();
 }
+// Category tabs (All · EP · OT · ...), each counting the roles that match the other filters.
+function renderCats() {
+  const el = $("#cats");
+  el.hidden = CATS.length < 2;
+  const count = (id) => DATA.jobs.filter((j) => passesFilters(j, true) && matchesType(j, state.type) && (!id || (j.categories ?? []).includes(id))).length;
+  el.innerHTML = [{ id: "", label: "All roles" }, ...CATS]
+    .map((c) => `<button class="cat${state.cat === c.id ? " active" : ""}" data-cat="${esc(c.id)}"${c.color ? ` style="--c:${c.color}"` : ""}><i></i>${esc(c.label)}<b>${count(c.id)}</b></button>`)
+    .join("");
+}
+$("#cats").addEventListener("click", (e) => {
+  const b = e.target.closest("[data-cat]");
+  if (!b || b.dataset.cat === state.cat) return;
+  state.cat = b.dataset.cat;
+  store.set("cat", state.cat);
+  renderList();
+  renderHero();
+});
 function renderSegCounts() {
   const base = DATA.jobs.filter(passesFilters);
   $$("#seg button").forEach((b) => { b.querySelector("b").textContent = base.filter((j) => matchesType(j, b.dataset.type)).length; });
@@ -779,7 +823,7 @@ function renderDetail(j) {
   el.innerHTML = `
     <button class="icon-btn close" data-close aria-label="Close">${icon("x")}</button>
     <div class="d-hero" style="--h1:hsl(${h} 75% 60%);--h2:hsl(${(h + 55) % 360} 70% 50%)">
-      <div class="d-top">${avatar(j, "lg")}<div class="d-badges">${isNew(j) ? '<span class="tag new">New</span>' : ""}${j.isHospital ? `<span class="tag hosp">${icon("hospital")}Hospital</span>` : ""}${isOpen(j) ? "" : '<span class="tag muted">No longer listed</span>'}</div></div>
+      <div class="d-top">${avatar(j, "lg")}<div class="d-badges">${catTags(j)}${isNew(j) ? '<span class="tag new">New</span>' : ""}${j.isHospital ? `<span class="tag hosp">${icon("hospital")}Hospital</span>` : ""}${isOpen(j) ? "" : '<span class="tag muted">No longer listed</span>'}</div></div>
       <h2 class="d-title">${esc(j.title)}</h2>
       <div class="d-org"><span>${icon("building")}${esc(j.company)}</span>${j.location ? `<span>${icon("pin")}${esc(j.location)}</span>` : ""}</div>
       <div class="d-when">Listed ${esc(fmtDate(j.listedAt))} · found on ${j.sources.map((s) => esc(s.name)).join(", ")}</div>

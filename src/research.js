@@ -117,7 +117,7 @@ ${job.description || job.summary || "(no description available)"}
 </ad>`)
     .join("\n\n");
 
-  const prompt = `Below are ${jobs.length} job ads. An Exercise Physiologist is deciding which to apply for. For each ad, add one entry to "jobs" with its ref and these facts.
+  const prompt = `Below are ${jobs.length} job ads for allied health and exercise roles (exercise physiology, occupational therapy, exercise science, Pilates). The reader is deciding which to apply for. For each ad, add one entry to "jobs" with its ref and these facts.
 
 ${STYLE}
 
@@ -139,8 +139,8 @@ ${ads}`;
   return jobs.map((_, i) => byRef.get(String(i)) ?? null);
 }
 
-export async function researchCompany(company, location, cfg) {
-  const prompt = `I'm an Exercise Physiologist in Melbourne, Australia, considering a job with "${company}" (${location}).
+export async function researchCompany(company, location, cfg, person = "an allied health professional") {
+  const prompt = `I'm ${person} in Melbourne, Australia, considering a job with "${company}" (${location}).
 
 Use web search, and fetch pages where useful, to find out:
 1. What employees say about working there: ratings on SEEK, Indeed and Glassdoor (Australian sites), and the most common praise and complaints, especially from allied health staff (exercise physiologists, physios, OTs).

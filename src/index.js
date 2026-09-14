@@ -7,7 +7,7 @@ import * as indeed from "./sources/indeed.js";
 import * as linkedin from "./sources/linkedin.js";
 import * as careers from "./sources/careers.js";
 import { openDb } from "./db.js";
-import { broadTitleMatch, companyKey, dedupeKey, hospitalScore, mentionsEp, sameRole, titleMatches } from "./filter.js";
+import { broadTitleMatch, categoriesFor, companyKey, dedupeKey, hospitalScore, roleFor, sameRole, titleMatches } from "./filter.js";
 import { extractDetails } from "./extract.js";
 import { htmlToText } from "./text.js";
 import { AI_VERSION, aiAvailable, extractJobs, isFatalAiError, researchCompany } from "./research.js";
@@ -30,6 +30,15 @@ const args = new Set(process.argv.slice(2));
 const cfg = JSON.parse(readFileSync(join(ROOT, "config.json"), "utf8"));
 // On GitHub the ntfy topic comes from a repository secret, so it never appears in the code.
 if (process.env.NTFY_TOPIC) cfg.notifications.ntfyTopic = process.env.NTFY_TOPIC;
+// Every enabled role category (EP, OT, ...) contributes its search terms.
+cfg.searchTerms = [...new Set(cfg.categories.filter((c) => c.enabled !== false).flatMap((c) => c.searchTerms))];
+
+// Older saved jobs predate categories; work theirs out from the title and ad.
+const withCategories = (job) => {
+  if (job.categories) return job;
+  const categories = categoriesFor(job, cfg);
+  return { ...job, categories, excluded: !categories.length };
+};
 const log = (...parts) => console.log(`[${new Date().toLocaleString("en-AU")}]`, ...parts);
 
 const HELP = `EP Job Observer - hospital Exercise Physiologist jobs from Seek, Indeed and LinkedIn
@@ -58,8 +67,10 @@ function buildJob(id, listing, extra, now) {
   const job = { ...listing, ...filled, id, firstSeen: now, lastSeen: now };
   job.description = htmlToText(job.descriptionHtml || job.summary || "");
   delete job.descriptionHtml;
-  // A generic allied health title that doesn't mention EPs is saved (so it isn't re-fetched) but hidden.
-  job.excluded = !titleMatches(job.title, cfg) && !mentionsEp(job.description);
+  // Generic titles ("Allied Health Clinician") count only if the ad names one of the roles;
+  // the rest are saved (so they aren't fetched again) but hidden.
+  job.categories = categoriesFor(job, cfg);
+  job.excluded = !job.categories.length;
   job.extracted = extractDetails(`${job.title}\n${job.description}`);
   const { score, reasons } = hospitalScore(job, cfg);
   job.hospitalScore = score;
@@ -88,12 +99,18 @@ async function runOnce(db) {
     if (!cfg.sources[name]) continue;
     const listings = await source.search(cfg, log);
     const relevant = listings.filter((j) => titleMatches(j.title, cfg) || broadTitleMatch(j.title, cfg));
-    log(`${name}: ${listings.length} listings, ${relevant.length} with an EP or allied health title`);
+    log(`${name}: ${listings.length} listings, ${relevant.length} with a matching title`);
     for (const listing of relevant) {
       const id = `${name}:${listing.sourceId}`;
       const existing = db.getJob(id);
       if (existing) {
         db.touch(id, now);
+        // Re-categorise, in case the categories in config.json changed since it was saved.
+        const categories = categoriesFor(existing, cfg);
+        if (String(categories) !== String(existing.categories)) {
+          Object.assign(existing, { categories, excluded: !categories.length });
+          db.updateJob(existing);
+        }
         known.push(existing);
         continue;
       }
@@ -153,7 +170,7 @@ async function runOnce(db) {
       if (!useAi) return;
       log(`Researching reviews and interview process: ${job.company}`);
       try {
-        db.saveCompany(key, job.company, await researchCompany(job.company, job.location, cfg));
+        db.saveCompany(key, job.company, await researchCompany(job.company, job.location, cfg, roleFor(job, cfg)));
       } catch (err) {
         log(`Research failed for ${job.company} - ${err.message}`);
         stopAiIfFatal(err);
@@ -173,7 +190,7 @@ async function runOnce(db) {
   if (toNotify.length && !args.has("--no-notify")) {
     if (firstRun) {
       // Don't fire dozens of toasts for jobs that were already open before the observer started.
-      await send(cfg, `Found ${toNotify.length} open EP roles`,["From now on you'll be notified about new ones.", "Click to open the report."], REPORT_URL);
+      await send(cfg, `Found ${toNotify.length} open roles`,["From now on you'll be notified about new ones.", "Click to open the report."], REPORT_URL);
     } else {
       await notifyJobs(cfg, toNotify, REPORT_URL);
     }
@@ -197,8 +214,11 @@ async function main() {
 
   const db = openDb(join(ROOT, "data", "jobs.db"));
   const rebuildReport = () => {
-    writeReport(REPORT_PATH, db.allJobs(), db.allCompanies(), {
+    writeReport(REPORT_PATH, db.allJobs().map(withCategories), db.allCompanies(), {
       city: cfg.location.seek.split(/[\s,]/)[0],
+      categories: cfg.categories
+        .filter((c) => c.enabled !== false)
+        .map(({ id, label, short, plural, color }) => ({ id, label, short, plural, color })),
       careerSites: cfg.sources.careers ? cfg.careerSites.length : 0,
       repo: process.env.GITHUB_REPOSITORY, // set by GitHub Actions
       branch: process.env.GITHUB_REF_NAME,

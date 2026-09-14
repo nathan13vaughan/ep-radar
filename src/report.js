@@ -17,6 +17,7 @@ function groupJobs(jobs) {
     group.sources.push(source);
     if (job.lastSeen > group.lastSeen) group.lastSeen = job.lastSeen;
     group.isHospital ||= job.isHospital;
+    group.categories = [...new Set([...(group.categories ?? []), ...(job.categories ?? [])])];
     for (const k of ["salary", "workType", "rating", "reviewsUrl", "ai", "companyPage", "applyUrl"]) group[k] ||= job[k];
     if ((job.description?.length ?? 0) > (group.description?.length ?? 0)) group.description = job.description;
   }
@@ -101,6 +102,7 @@ function toCard(job, research) {
     lastSeen: job.lastSeen,
     sources: job.sources,
     isHospital: Boolean(job.isHospital),
+    categories: job.categories ?? [],
     hospitalReasons: job.hospitalReasons ?? [],
     workplace: ai.workplace ?? "",
     salary,
@@ -138,6 +140,7 @@ export function writeReport(file, jobs, companies, meta = {}) {
     generatedAt: new Date().toISOString(),
     city: meta.city ?? "",
     careerSites: meta.careerSites ?? 0,
+    categories: meta.categories ?? [],
     repo: meta.repo ?? "",
     branch: meta.branch ?? "",
     workflow: "check-jobs.yml",

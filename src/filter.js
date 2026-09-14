@@ -6,20 +6,44 @@ const HOSPITAL_PHRASE = /\b(public|private|our|regional|district|base|rural)\s+h
 const HOSPITAL_WORD = /\bhospitals?\b/gi;
 const SETTING_WORDS = /\binpatients?\b|\bwards?\b|\bacute\b|sub-?acute|outpatient clinic|hospital in the home|\bmultidisciplinary\b/gi;
 
-const hasAny = (text, words) => words.some((w) => text.includes(w.toLowerCase()));
+const hasAny = (text, words = []) => words.some((w) => text.includes(w.toLowerCase()));
 
+// Role categories from config.json (EP, OT, ...), with their patterns compiled once.
+let compiled;
+function categories(cfg) {
+  compiled ??= cfg.categories
+    .filter((c) => c.enabled !== false)
+    .map((c) => ({
+      ...c,
+      titleRe: c.titlePatterns.map((p) => new RegExp(p, "i")),
+      mentionRe: c.mentionPatterns.map((p) => new RegExp(p, "i")),
+    }));
+  return compiled;
+}
+const matching = (text, cfg, key) => categories(cfg).filter((c) => c[key].some((re) => re.test(text))).map((c) => c.id);
+
+// A title we want: it names one of the roles and isn't on the exclude list. Soft exclusions
+// ("nurse") only apply when the title doesn't name a role outright, so "Cardiac Rehab Nurse"
+// is dropped but "Exercise Physiologist / Registered Nurse" is kept.
 export function titleMatches(title = "", cfg) {
   const t = title.toLowerCase();
-  if (!hasAny(t, cfg.titleKeywords) || hasAny(t, cfg.titleExclude)) return false;
-  // Soft exclusions only bite when the title isn't clearly an EP role,
-  // so "Exercise Physiologist / Registered Nurse" still gets through.
-  return t.includes("exercise physiolog") || !hasAny(t, cfg.titleExcludeUnlessEp);
+  if (hasAny(t, cfg.titleExclude) || !matching(title, cfg, "titleRe").length) return false;
+  return matching(title, cfg, "mentionRe").length > 0 || !hasAny(t, cfg.titleExcludeUnlessRole);
 }
 
-// Generic titles ("Allied Health Clinician") that are worth opening; kept only if the ad mentions EPs.
+// Generic titles ("Allied Health Clinician") that are worth opening; kept only if the ad names one of the roles.
 export const broadTitleMatch = (title = "", cfg) =>
   hasAny(title.toLowerCase(), cfg.broadTitleKeywords) && !hasAny(title.toLowerCase(), cfg.titleExclude);
-export const mentionsEp = (text = "") => /exercise physiolog/i.test(text);
+
+// The categories a job belongs to: from its title, or for generic titles, from the roles its ad names.
+export function categoriesFor(job, cfg) {
+  const fromTitle = matching(job.title ?? "", cfg, "titleRe");
+  if (fromTitle.length) return fromTitle;
+  return broadTitleMatch(job.title, cfg) ? matching(job.description ?? "", cfg, "mentionRe") : [];
+}
+
+// "an Occupational Therapist" etc., for Claude's employer research.
+export const roleFor = (job, cfg) => categories(cfg).find((c) => c.id === job.categories?.[0])?.person ?? "an allied health professional";
 
 // Heuristic evidence that a role is hospital-based. Used on its own when AI is off,
 // and to decide which listings are worth an AI check when it's on.

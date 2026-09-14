@@ -8,26 +8,71 @@
   "maxAgeDays": 60,
   "checkEveryMinutes": 120,
 
-  "searchTerms": [
-    "exercise physiologist",
-    "exercise physiology",
-    "accredited exercise physiologist",
-    "clinical exercise physiologist",
-    "exercise physiologist hospital",
-    "exercise physiologist inpatient",
-    "exercise physiologist grade 1",
-    "exercise physiologist grade 2",
-    "graduate exercise physiologist",
-    "physiotherapist or exercise physiologist",
-    "allied health exercise physiologist",
-    "cardiac rehabilitation",
-    "pulmonary rehabilitation"
-  ],
-  "titleKeywords": [
-    "exercise physiolog",
-    "cardiac rehab",
-    "pulmonary rehab",
-    "cardiopulmonary rehab"
+  "categories": [
+    {
+      "id": "ep",
+      "label": "Exercise Physiology",
+      "short": "EP",
+      "plural": "Exercise Physiologist roles",
+      "person": "an Exercise Physiologist",
+      "color": "#2dd4bf",
+      "searchTerms": [
+        "exercise physiologist",
+        "exercise physiology",
+        "accredited exercise physiologist",
+        "clinical exercise physiologist",
+        "exercise physiologist hospital",
+        "exercise physiologist inpatient",
+        "exercise physiologist grade 1",
+        "exercise physiologist grade 2",
+        "graduate exercise physiologist",
+        "physiotherapist or exercise physiologist",
+        "allied health exercise physiologist",
+        "cardiac rehabilitation",
+        "pulmonary rehabilitation"
+      ],
+      "titlePatterns": ["exercise physiolog", "\\bAEP\\b", "cardiac rehab", "pulmonary rehab", "cardiopulmonary rehab"],
+      "mentionPatterns": ["exercise physiolog"]
+    },
+    {
+      "id": "ot",
+      "label": "Occupational Therapy",
+      "short": "OT",
+      "plural": "Occupational Therapist roles",
+      "person": "an Occupational Therapist",
+      "color": "#a78bfa",
+      "searchTerms": [
+        "occupational therapist",
+        "occupational therapy",
+        "occupational therapist hospital",
+        "graduate occupational therapist",
+        "occupational therapist grade 2"
+      ],
+      "titlePatterns": ["occupational therap", "\\bOTs?\\b"],
+      "mentionPatterns": ["occupational therap"]
+    },
+    {
+      "id": "exercise",
+      "label": "Exercise Science",
+      "short": "Exercise",
+      "plural": "exercise science & rehab roles",
+      "person": "an Exercise Scientist",
+      "color": "#fbbf24",
+      "searchTerms": ["exercise scientist", "exercise therapist", "exercise rehabilitation", "strength and conditioning coach"],
+      "titlePatterns": ["exercise scien", "exercise therap", "exercise rehab", "strength (and|&) conditioning", "kinesiolog"],
+      "mentionPatterns": ["exercise scien"]
+    },
+    {
+      "id": "pilates",
+      "label": "Pilates",
+      "short": "Pilates",
+      "plural": "Pilates roles",
+      "person": "a Pilates instructor",
+      "color": "#f472b6",
+      "searchTerms": ["clinical pilates", "pilates instructor", "reformer pilates"],
+      "titlePatterns": ["pilates"],
+      "mentionPatterns": ["pilates"]
+    }
   ],
   "broadTitleKeywords": [
     "allied health clinician",
@@ -38,10 +83,11 @@
   ],
   "titleExclude": [
     "student", "volunteer", "placement", "lecturer", "relocation", "interstate",
+    "receptionist", "front desk", "front of house", "customer service", "administration",
     "sydney", "canberra", "brisbane", "perth", "adelaide", "hobart", "darwin", "gold coast",
     "tasmania", "launceston", "devonport", "queensland", "nsw", "geelong", "ballarat", "bendigo"
   ],
-  "titleExcludeUnlessEp": ["nurse", "sales"],
+  "titleExcludeUnlessRole": ["nurse", "sales"],
 
   "hospitalOnly": false,
   "hospitalScoreThreshold": 2,
@@ -78,8 +124,8 @@
     { "name": "Epworth HealthCare", "type": "smartrecruiters", "company": "Epworth" },
     { "name": "Ramsay Health Care", "type": "smartrecruiters", "company": "RamsayHealthCare1", "query": "region=Victoria" },
     { "name": "Calvary Health Care", "type": "pageup", "instance": "1106", "locationMatch": "caulfield|kooyong|melbourne|bethlehem|\\bVIC\\b" },
-    { "name": "Healthscope", "type": "taleo", "host": "careers.healthscope.com.au", "keywords": ["exercise physiologist", "exercise physiology"], "locationMatch": "melbourne|\\bVIC\\b|victoria" },
-    { "name": "Careers.Vic", "type": "careersvic", "keywords": ["exercise physiologist", "exercise physiology"], "locationMatch": "melbourne" }
+    { "name": "Healthscope", "type": "taleo", "host": "careers.healthscope.com.au", "keywords": ["exercise physiologist", "exercise physiology", "occupational therapist", "exercise scientist", "pilates"], "locationMatch": "melbourne|\\bVIC\\b|victoria" },
+    { "name": "Careers.Vic", "type": "careersvic", "keywords": ["exercise physiologist", "occupational therapist", "exercise scientist"], "locationMatch": "melbourne" }
   ],
   "pagesPerSearch": 5,
   "requestDelayMs": 800,
