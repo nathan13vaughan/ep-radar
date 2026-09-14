@@ -184,8 +184,11 @@ async function runOnce(db) {
   // 4. Where is each open role, and how far is it from home? Cached, so only new places are looked up.
   if (cfg.home) {
     try {
-      // Newest first, so new roles get a map straight away if the lookup limit is reached.
-      const open = db.allJobs().filter((j) => !j.excluded && j.lastSeen === now).sort((a, b) => b.firstSeen.localeCompare(a.firstSeen));
+      // Every role the report shows as open (seen in the last 3 days, not just this run), newest
+      // first so new roles get a map straight away if the lookup limit is reached.
+      const open = db.allJobs()
+        .filter((j) => !j.excluded && Date.now() - Date.parse(j.lastSeen) < 3 * 864e5)
+        .sort((a, b) => b.firstSeen.localeCompare(a.firstSeen));
       await refreshPlaces(open, db, cfg, log);
     } catch (err) {
       log(`travel: couldn't work out distances - ${err.message}`);
