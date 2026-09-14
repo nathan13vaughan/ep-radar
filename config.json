@@ -5,6 +5,8 @@
     "linkedin": "Melbourne, Victoria, Australia"
   },
   "radiusKm": 50,
+  "home": { "label": "Narre Warren", "query": "Narre Warren, Victoria, Australia" },
+  "maxLocationLookupsPerRun": 300,
   "maxAgeDays": 60,
   "checkEveryMinutes": 120,
 

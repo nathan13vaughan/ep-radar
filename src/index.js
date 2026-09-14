@@ -13,6 +13,7 @@ import { htmlToText } from "./text.js";
 import { AI_VERSION, aiAvailable, extractJobs, isFatalAiError, researchCompany } from "./research.js";
 import { notifyJobs, send } from "./notify.js";
 import { writeReport } from "./report.js";
+import { homePlace, placeFor, refreshPlaces } from "./geo.js";
 import { sleep } from "./http.js";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -47,6 +48,7 @@ const HELP = `EP Job Observer - hospital Exercise Physiologist jobs from Seek, I
   node src/index.js --watch         keep running and check every ${cfg.checkEveryMinutes} minutes
   node src/index.js --open          open the report when done
   node src/index.js --report-only   rebuild report.html from saved jobs without searching
+  node src/index.js --places-only   look up travel distances for open roles, then rebuild the report
   node src/index.js --no-notify     don't send notifications this run
   node src/index.js --no-ai         skip Claude research this run
   node src/index.js --test-notify   send a test notification`;
@@ -179,7 +181,16 @@ async function runOnce(db) {
     if (due.length > cfg.ai.maxCompaniesPerRun) log(`${due.length - cfg.ai.maxCompaniesPerRun} employer(s) left to research on later checks`);
   }
 
-  // 4. Notify - once per role, even when it's advertised on several sites.
+  // 4. Where is each open role, and how far is it from home? Cached, so only new places are looked up.
+  if (cfg.home) {
+    try {
+      await refreshPlaces(db.allJobs().filter((j) => !j.excluded && j.lastSeen === now), db, cfg, log);
+    } catch (err) {
+      log(`travel: couldn't work out distances - ${err.message}`);
+    }
+  }
+
+  // 5. Notify - once per role, even when it's advertised on several sites.
   const targets = fresh.filter((j) => !j.excluded && (j.isHospital || !cfg.hospitalOnly));
   const alreadyNotified = db.allJobs().filter((j) => j.notified);
   const toNotify = [];
@@ -214,8 +225,10 @@ async function main() {
 
   const db = openDb(join(ROOT, "data", "jobs.db"));
   const rebuildReport = () => {
-    writeReport(REPORT_PATH, db.allJobs().map(withCategories), db.allCompanies(), {
+    const jobs = db.allJobs().map(withCategories).map((j) => ({ ...j, place: cfg.home ? placeFor(j, db, cfg) : null }));
+    writeReport(REPORT_PATH, jobs, db.allCompanies(), {
       city: cfg.location.seek.split(/[\s,]/)[0],
+      home: cfg.home ? homePlace(db, cfg) : null,
       categories: cfg.categories
         .filter((c) => c.enabled !== false)
         .map(({ id, label, short, plural, color }) => ({ id, label, short, plural, color })),
@@ -226,7 +239,13 @@ async function main() {
     log(`Report updated: ${REPORT_PATH}`);
   };
 
-  if (!args.has("--report-only")) await runOnce(db);
+  if (args.has("--places-only")) {
+    // Fill in travel distances for open roles without searching (e.g. after changing "home").
+    const open = db.allJobs().map(withCategories).filter((j) => !j.excluded && Date.now() - Date.parse(j.lastSeen) < 3 * 864e5);
+    await refreshPlaces(open, db, cfg, log);
+  } else if (!args.has("--report-only")) {
+    await runOnce(db);
+  }
   rebuildReport();
   if (args.has("--open")) openFile(REPORT_PATH);
 

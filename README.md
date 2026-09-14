@@ -114,6 +114,18 @@ Flags for `node src/index.js`: `--watch`, `--open`, `--report-only`, `--no-notif
 
 A keyword check scores each ad: does the employer look like a hospital or health service (e.g. "Local Health District", "Hospital and Health Service", "Ramsay Health")? Does the title or ad mention hospital, inpatient, ward or acute settings? With AI on, Claude reads the ad and makes the final call. So a private clinic that only mentions "hospital referrals" is excluded, and a Queensland Government ad for a Hospital and Health Service is included. Each job card shows why it passed ("Hospital check" under *Full ad*), and the **Hospital roles only** filter narrows the report to them.
 
+## Travel from home
+
+Each role shows a map with the driving route and distance from home (Narre Warren), plus buttons that open Google Maps with directions by car or public transport. Job cards show the distance too, and the report can sort by **Closest first**.
+
+- **Change home:** edit `home` in `config.json`, then run `node src/index.js --places-only` to redo the distances.
+- **What's used:** free OpenStreetMap services, no account needed:
+  - Nominatim finds where each suburb is;
+  - the public OSRM server gives the driving distance and time, which assumes no traffic;
+  - OpenStreetMap draws the map.
+- **Keeping requests light:** these services ask for light use, so each place is looked up once, at most one lookup a second, and cached. `maxLocationLookupsPerRun` caps the new lookups per check.
+- **Approximate locations:** when an ad only says "Melbourne", the distance is measured to the CBD. When it gives no suburb, it's measured to the employer's address. The report says which.
+
 ## Hospital careers sites
 
 Many hospitals post roles on their own careers site before, or instead of, the big job boards. The `careers` source reads these sites directly:

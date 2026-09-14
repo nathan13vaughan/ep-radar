@@ -21,6 +21,10 @@ export function openDb(file) {
       researched_at TEXT NOT NULL,
       data TEXT NOT NULL
     );
+    CREATE TABLE IF NOT EXISTS places (
+      key TEXT PRIMARY KEY,
+      data TEXT NOT NULL
+    );
   `);
 
   const readJob = (row) => ({ ...JSON.parse(row.data), lastSeen: row.last_seen, notified: Boolean(row.notified) });
@@ -35,6 +39,8 @@ export function openDb(file) {
     getCompany: db.prepare("SELECT * FROM companies WHERE key = ?"),
     allCompanies: db.prepare("SELECT * FROM companies"),
     saveCompany: db.prepare("INSERT OR REPLACE INTO companies (key, name, researched_at, data) VALUES (?, ?, ?, ?)"),
+    getPlace: db.prepare("SELECT data FROM places WHERE key = ?"),
+    savePlace: db.prepare("INSERT OR REPLACE INTO places (key, data) VALUES (?, ?)"),
   };
 
   return {
@@ -56,5 +62,11 @@ export function openDb(file) {
     allCompanies: () =>
       Object.fromEntries(stmt.allCompanies.all().map((r) => [r.key, { ...JSON.parse(r.data), researchedAt: r.researched_at }])),
     saveCompany: (key, name, data) => stmt.saveCompany.run(key, name, new Date().toISOString(), JSON.stringify(data)),
+    // Cached map lookups: "geo:<search>" -> coordinates, "route:<from>><to>" -> distance and time.
+    getPlace: (key) => {
+      const row = stmt.getPlace.get(key);
+      return row ? JSON.parse(row.data) : null;
+    },
+    savePlace: (key, data) => stmt.savePlace.run(key, JSON.stringify(data)),
   };
 }

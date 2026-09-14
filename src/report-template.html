@@ -279,6 +279,25 @@
   .fine { display: flex; gap: 8px; margin: 26px 0 0; font-size: 12px; color: var(--ink-3); }
   .fine svg { width: 13px; height: 13px; margin-top: 2px; }
 
+  /* Travel from home */
+  .travel-card { overflow: hidden; border-radius: 16px; border: 1px solid var(--line); background: var(--surface-2); }
+  .map { height: 210px; background: var(--bg-2); }
+  .map-off { display: grid; place-items: center; height: 100%; margin: 0; font-size: 13px; color: var(--ink-3); }
+  .map .leaflet-container, .map.leaflet-container { font: inherit; background: var(--bg-2); }
+  :root:not([data-theme="light"]) .map .leaflet-tile-pane { filter: invert(1) hue-rotate(180deg) brightness(.92) contrast(.9) saturate(.6); }
+  .travel-meta { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 16px; padding: 12px 14px; }
+  .trip b { font-size: 20px; letter-spacing: -.02em; }
+  .trip span { font-size: 13.5px; color: var(--ink-2); }
+  .trip small { display: block; margin-top: 2px; font-size: 12px; color: var(--ink-3); }
+  .trip-links { display: flex; flex-wrap: wrap; gap: 8px; }
+  .pin { display: block; width: 16px; height: 16px; border-radius: 50%; border: 3px solid #fff; background: var(--c); animation: pinpulse 2.2s infinite; }
+  @keyframes pinpulse { 0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--c) 65%, transparent); } 70% { box-shadow: 0 0 0 14px transparent; } 100% { box-shadow: 0 0 0 0 transparent; } }
+  .route-line { stroke-dasharray: 1; stroke-dashoffset: 1; animation: draw 1.6s var(--ease) .2s forwards; }
+  @keyframes draw { to { stroke-dashoffset: 0; } }
+  .leaflet-control-attribution { font-size: 10px; color: var(--ink-3) !important; background: color-mix(in srgb, var(--surface-solid) 80%, transparent) !important; }
+  .leaflet-control-attribution a { color: var(--ink-2) !important; }
+  .tag.dist { color: var(--ink-2); }
+
   /* Role categories */
   .cats { flex-basis: 100%; display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; }
   .cats::-webkit-scrollbar { display: none; }
@@ -454,6 +473,8 @@
   <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z"/></symbol>
   <symbol id="i-chev" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
   <symbol id="i-back" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></symbol>
+  <symbol id="i-car" viewBox="0 0 24 24"><path d="M19 17h2a1 1 0 0 0 1-1v-3c0-.9-.7-1.7-1.5-1.9L16 10l-2.2-2.3A2.5 2.5 0 0 0 12 7H5a1.6 1.6 0 0 0-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4a1 1 0 0 0 1 1h2"/><circle cx="7" cy="17" r="2"/><path d="M9 17h6"/><circle cx="17" cy="17" r="2"/></symbol>
+  <symbol id="i-train" viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="14" rx="3"/><path d="M5 10h14M12 3v7M8 21l2-4M16 21l-2-4"/><circle cx="9" cy="13.5" r=".6"/><circle cx="15" cy="13.5" r=".6"/></symbol>
   <symbol id="i-hospital" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><path d="M12 8v8M8 12h8"/></symbol>
   <symbol id="i-file" viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></symbol>
   <symbol id="i-radar" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><path d="m12 12 6-6"/><circle cx="12" cy="12" r="1"/></symbol>
@@ -515,6 +536,7 @@
         <option value="salary">Highest pay</option>
         <option value="rating">Best-rated employer</option>
         <option value="company">Employer A–Z</option>
+        <option value="distance">Closest first</option>
       </select></label>
     </div>
     <div class="list" id="list" role="listbox" aria-label="Roles"></div>
@@ -617,6 +639,7 @@ const SORTS = {
   salary: (a, b) => (b.salaryAnnual ?? -1) - (a.salaryAnnual ?? -1),
   rating: (a, b) => (b.seekRating?.value ?? -1) - (a.seekRating?.value ?? -1),
   company: (a, b) => a.company.localeCompare(b.company),
+  distance: (a, b) => distanceKm(a) - distanceKm(b),
 };
 const visibleJobs = () => DATA.jobs.filter((j) => passesFilters(j) && matchesType(j, state.type)).sort(SORTS[state.sort]);
 
@@ -697,6 +720,7 @@ function card(j, i) {
   if (j.isHospital) tags.push(`<span class="tag hosp">${icon("hospital")}Hospital</span>`);
   if (j.salary && j.salaryAnnual) tags.push(`<span class="tag money">${esc(shortSalary(j))}</span>`);
   if (j.workType) tags.push(`<span class="tag">${esc(shortType(j.workType))}</span>`);
+  if (HOME && j.place) tags.push(`<span class="tag dist" title="From ${esc(HOME.label)}">${icon("car")}${distanceLabel(j)}</span>`);
   if (applied.has(j.id)) tags.push(`<span class="tag done">${icon("check")}Applied</span>`);
   if (!isOpen(j)) tags.push('<span class="tag muted">No longer listed</span>');
   const active = j.id === state.selected;
@@ -803,6 +827,109 @@ function interviewBlock(r) {
     ${r.questions.length ? `<details class="mini"><summary>Likely questions (${r.questions.length})</summary><ul>${r.questions.map((q) => `<li>${esc(q)}</li>`).join("")}</ul></details>` : ""}
   </section>`;
 }
+/* ---------- Travel from home ---------- */
+// Distances are worked out when the report is built; the map (Leaflet + CARTO tiles) loads
+// the first time a role with a location is opened, and the route shape comes from OSRM.
+const HOME = DATA.home;
+if (!HOME) $('#sort option[value="distance"]')?.remove();
+function crowKm(a, b) {
+  const rad = Math.PI / 180;
+  const h = Math.sin(((b.lat - a.lat) * rad) / 2) ** 2 + Math.cos(a.lat * rad) * Math.cos(b.lat * rad) * Math.sin(((b.lng - a.lng) * rad) / 2) ** 2;
+  return 12742 * Math.asin(Math.sqrt(h));
+}
+const distanceKm = (j) => (j.place ? (j.place.km ?? crowKm(HOME, j.place)) : 1e9);
+const distanceLabel = (j) => `${j.place.km == null || j.place.approx ? "~" : ""}${Math.round(distanceKm(j))} km`;
+const duration = (m) => (m < 60 ? `${m} min` : `${Math.floor(m / 60)} hr${m % 60 ? ` ${m % 60} min` : ""}`);
+
+function travelBlock(j) {
+  const p = j.place;
+  if (!HOME || !p) return "";
+  const main = p.km != null ? `${Math.round(p.km)} km` : `~${Math.round(crowKm(HOME, p))} km`;
+  const sub = p.km != null ? `about ${duration(p.mins)} by car, no traffic` : "in a straight line";
+  const note = p.approx === "city"
+    ? "The ad only says Melbourne, so this is measured to the CBD."
+    : p.approx === "employer" ? "The ad gives no suburb, so this is measured to the employer's address." : `To ${p.label}`;
+  const maps = (mode) => `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(`${HOME.label}, Victoria, Australia`)}&destination=${p.lat},${p.lng}&travelmode=${mode}`;
+  return `<section class="block">
+    <h4>${icon("car")}From ${esc(HOME.label)}</h4>
+    <div class="travel-card">
+      <div class="map" id="job-map" role="img" aria-label="Map from ${esc(HOME.label)} to the job"></div>
+      <div class="travel-meta">
+        <div class="trip"><b>${main}</b> <span>${esc(sub)}</span><small>${esc(note)}</small></div>
+        <div class="trip-links">
+          <a class="pill" href="${safeUrl(maps("driving"))}" ${EXT}>${icon("car")}Directions</a>
+          <a class="pill" href="${safeUrl(maps("transit"))}" ${EXT}>${icon("train")}Public transport</a>
+        </div>
+      </div>
+    </div>
+  </section>`;
+}
+
+let leafletReady = null;
+function loadLeaflet() {
+  leafletReady ??= new Promise((resolve, reject) => {
+    const css = document.createElement("link");
+    css.rel = "stylesheet";
+    css.href = "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css";
+    document.head.appendChild(css);
+    const js = document.createElement("script");
+    js.src = "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js";
+    js.onload = () => resolve(window.L);
+    js.onerror = () => { leafletReady = null; reject(new Error("map library didn't load")); };
+    document.head.appendChild(js);
+  });
+  return leafletReady;
+}
+let map = null;
+// OpenStreetMap's own tiles need no key; in dark mode CSS turns them into a matching dark map.
+const TILE_URL = "https://tile.openstreetmap.org/{z}/{x}/{y}.png";
+
+// Road route from home to the job, cached for the session. Falls back to a straight dashed line.
+async function routeShape(p) {
+  const key = `ep-radar:route:${HOME.lat},${HOME.lng}>${p.lat},${p.lng}`;
+  try { const hit = JSON.parse(sessionStorage.getItem(key)); if (hit) return hit; } catch {}
+  const res = await fetch(`https://router.project-osrm.org/route/v1/driving/${HOME.lng},${HOME.lat};${p.lng},${p.lat}?overview=simplified&geometries=geojson`);
+  const coords = (await res.json()).routes?.[0]?.geometry?.coordinates?.map(([lng, lat]) => [lat, lng]);
+  if (!coords) throw new Error("no route");
+  try { sessionStorage.setItem(key, JSON.stringify(coords)); } catch {}
+  return coords;
+}
+
+async function showMap(j) {
+  map?.remove();
+  map = null;
+  const el = $("#job-map");
+  if (!el) return;
+  let L;
+  try {
+    L = await loadLeaflet();
+  } catch {
+    el.innerHTML = '<p class="map-off">The map needs an internet connection.</p>';
+    return;
+  }
+  if (!el.isConnected || state.rendered !== j.id) return; // moved on to another role meanwhile
+  const p = j.place;
+  const color = catById.get(j.categories?.[0])?.color ?? "#8b8cf8";
+  map = L.map(el, { zoomControl: false, scrollWheelZoom: false, dragging: !isMobile(), tap: false });
+  L.tileLayer(TILE_URL, {
+    maxZoom: 18,
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+  }).addTo(map);
+  const pin = (c) => L.divIcon({ className: "", html: `<span class="pin" style="--c:${c}"></span>`, iconSize: [16, 16], iconAnchor: [8, 8] });
+  L.marker([HOME.lat, HOME.lng], { icon: pin("#4ade80"), title: HOME.label, keyboard: false }).addTo(map);
+  L.marker([p.lat, p.lng], { icon: pin(color), title: p.label, keyboard: false }).addTo(map);
+  map.fitBounds([[HOME.lat, HOME.lng], [p.lat, p.lng]], { padding: [36, 36], maxZoom: 13 });
+  const shape = await routeShape(p).catch(() => null);
+  if (!map || state.rendered !== j.id) return;
+  const line = L.polyline(shape ?? [[HOME.lat, HOME.lng], [p.lat, p.lng]], {
+    color, weight: 4, opacity: 0.9, className: shape ? "route-line" : "", dashArray: shape ? null : "6 8",
+  }).addTo(map);
+  if (shape) {
+    line.getElement()?.setAttribute("pathLength", "1"); // lets the CSS draw the line in
+    map.fitBounds(line.getBounds(), { padding: [30, 30] });
+  }
+}
+
 function renderDetail(j) {
   const el = $("#detail");
   if (!j) {
@@ -847,6 +974,7 @@ function renderDetail(j) {
       <div class="facts">${facts}</div>
       ${j.summary ? `<p class="summary">${esc(j.summary)}</p>` : ""}
       ${j.requirements.length ? `<div class="needs"><span>Needs</span>${j.requirements.map((r) => `<em>${esc(r)}</em>`).join("")}</div>` : ""}
+      ${travelBlock(j)}
       ${insightsBlock(j)}
       ${interviewBlock(j.research)}
       <details class="mini ad-mini"><summary>${icon("file")}Full ad</summary><div class="adtext open">${esc(j.description || "No description was captured for this listing.")}</div></details>
@@ -854,6 +982,7 @@ function renderDetail(j) {
     </div>`;
 
   el.scrollTop = 0;
+  showMap(j);
   requestAnimationFrame(() => requestAnimationFrame(() => {
     $$(".rbar b", el).forEach((bar) => { bar.style.width = bar.dataset.p + "%"; });
   }));
@@ -879,6 +1008,7 @@ function openSheet() {
   $("#scrim").classList.add("on");
   document.body.classList.add("locked");
   if (!history.state?.epSheet) history.pushState({ epSheet: true }, "");
+  setTimeout(() => map?.invalidateSize(), 550); // the map was sized while the sheet was off-screen
 }
 function hideSheet() {
   const sheet = $("#detail");
@@ -902,6 +1032,7 @@ addEventListener("popstate", hideSheet);
   let startTime = 0;
   sheet.addEventListener("touchstart", (e) => {
     if (!isMobile() || !sheet.classList.contains("open")) return;
+    if (e.target.closest(".map")) return; // gestures on the map belong to the map
     if (!e.target.closest(".sheet-bar") && sheet.scrollTop > 0) return;
     startY = e.touches[0].clientY;
     dy = 0;
