@@ -842,20 +842,26 @@ const distanceLabel = (j) => `${j.place.km == null || j.place.approx ? "~" : ""}
 const duration = (m) => (m < 60 ? `${m} min` : `${Math.floor(m / 60)} hr${m % 60 ? ` ${m % 60} min` : ""}`);
 
 function travelBlock(j) {
+  if (!HOME) return "";
   const p = j.place;
-  if (!HOME || !p) return "";
-  const main = p.km != null ? `${Math.round(p.km)} km` : `~${Math.round(crowKm(HOME, p))} km`;
-  const sub = p.km != null ? `about ${duration(p.mins)} by car, no traffic` : "in a straight line";
-  const note = p.approx === "city"
-    ? "The ad only says Melbourne, so this is measured to the CBD."
-    : p.approx === "employer" ? "The ad gives no suburb, so this is measured to the employer's address." : `To ${p.label}`;
-  const maps = (mode) => `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(`${HOME.label}, Victoria, Australia`)}&destination=${p.lat},${p.lng}&travelmode=${mode}`;
+  // Brand-new roles may not have been located yet; directions still work from the ad's location text.
+  const destination = p ? `${p.lat},${p.lng}` : encodeURIComponent(`${j.location || j.company}, Victoria, Australia`);
+  const maps = (mode) => `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(`${HOME.label}, Victoria, Australia`)}&destination=${destination}&travelmode=${mode}`;
+  let trip = "<b>Map coming soon</b><small>This role is new, so it gets its map at the next update, within about 2 hours. Directions work now.</small>";
+  if (p) {
+    const main = p.km != null ? `${Math.round(p.km)} km` : `~${Math.round(crowKm(HOME, p))} km`;
+    const sub = p.km != null ? `about ${duration(p.mins)} by car, no traffic` : "in a straight line";
+    const note = p.approx === "city"
+      ? "The ad only says Melbourne, so this is measured to the CBD."
+      : p.approx === "employer" ? "The ad gives no suburb, so this is measured to the employer's address." : `To ${p.label}`;
+    trip = `<b>${main}</b> <span>${esc(sub)}</span><small>${esc(note)}</small>`;
+  }
   return `<section class="block">
     <h4>${icon("car")}From ${esc(HOME.label)}</h4>
     <div class="travel-card">
-      <div class="map" id="job-map" role="img" aria-label="Map from ${esc(HOME.label)} to the job"></div>
+      ${p ? `<div class="map" id="job-map" role="img" aria-label="Map from ${esc(HOME.label)} to the job"></div>` : ""}
       <div class="travel-meta">
-        <div class="trip"><b>${main}</b> <span>${esc(sub)}</span><small>${esc(note)}</small></div>
+        <div class="trip">${trip}</div>
         <div class="trip-links">
           <a class="pill" href="${safeUrl(maps("driving"))}" ${EXT}>${icon("car")}Directions</a>
           <a class="pill" href="${safeUrl(maps("transit"))}" ${EXT}>${icon("train")}Public transport</a>
@@ -972,9 +978,9 @@ function renderDetail(j) {
     </div>
     <div class="d-body">
       <div class="facts">${facts}</div>
+      ${travelBlock(j)}
       ${j.summary ? `<p class="summary">${esc(j.summary)}</p>` : ""}
       ${j.requirements.length ? `<div class="needs"><span>Needs</span>${j.requirements.map((r) => `<em>${esc(r)}</em>`).join("")}</div>` : ""}
-      ${travelBlock(j)}
       ${insightsBlock(j)}
       ${interviewBlock(j.research)}
       <details class="mini ad-mini"><summary>${icon("file")}Full ad</summary><div class="adtext open">${esc(j.description || "No description was captured for this listing.")}</div></details>

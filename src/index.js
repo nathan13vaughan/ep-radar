@@ -184,7 +184,9 @@ async function runOnce(db) {
   // 4. Where is each open role, and how far is it from home? Cached, so only new places are looked up.
   if (cfg.home) {
     try {
-      await refreshPlaces(db.allJobs().filter((j) => !j.excluded && j.lastSeen === now), db, cfg, log);
+      // Newest first, so new roles get a map straight away if the lookup limit is reached.
+      const open = db.allJobs().filter((j) => !j.excluded && j.lastSeen === now).sort((a, b) => b.firstSeen.localeCompare(a.firstSeen));
+      await refreshPlaces(open, db, cfg, log);
     } catch (err) {
       log(`travel: couldn't work out distances - ${err.message}`);
     }
@@ -241,7 +243,9 @@ async function main() {
 
   if (args.has("--places-only")) {
     // Fill in travel distances for open roles without searching (e.g. after changing "home").
-    const open = db.allJobs().map(withCategories).filter((j) => !j.excluded && Date.now() - Date.parse(j.lastSeen) < 3 * 864e5);
+    const open = db.allJobs().map(withCategories)
+      .filter((j) => !j.excluded && Date.now() - Date.parse(j.lastSeen) < 3 * 864e5)
+      .sort((a, b) => b.firstSeen.localeCompare(a.firstSeen));
     await refreshPlaces(open, db, cfg, log);
   } else if (!args.has("--report-only")) {
     await runOnce(db);
