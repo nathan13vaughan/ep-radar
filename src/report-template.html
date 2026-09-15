@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>EP Radar · Allied health & exercise jobs</title>
 <!-- Lets the published site be added to a phone's home screen like an app. -->
-<meta name="theme-color" content="#06080c">
+<meta name="theme-color" content="#0e0d10">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -31,25 +31,26 @@
     --ease: cubic-bezier(.2, .7, .2, 1);
     --spring: cubic-bezier(.34, 1.56, .64, 1);
 
-    --bg: #06080c; --bg-2: #0b0f16; --surface: rgba(255,255,255,.035); --surface-2: rgba(255,255,255,.065); --surface-solid: #0d1219;
+    /* "Sunset": warm charcoal with a coral-to-pink accent and teal as the second colour. */
+    --bg: #0e0d10; --bg-2: #16141a; --surface: rgba(255,255,255,.04); --surface-2: rgba(255,255,255,.07); --surface-solid: #1a181e;
     --line: rgba(255,255,255,.08); --line-2: rgba(255,255,255,.15);
-    --ink: #eef2f7; --ink-2: #a9b3c2; --ink-3: #6b7686; --on-accent: #06080c;
-    --mint: #5eead4; --iris: #8b8cf8; --peach: #fdba74; --rose: #fb7185; --gold: #fcd34d; --green: #4ade80;
-    --accent-grad: linear-gradient(135deg, #5eead4 0%, #8b8cf8 55%, #c084fc 100%);
-    --glow: 0 0 0 1px rgba(139,140,248,.4), 0 14px 40px -14px rgba(94,234,212,.45);
+    --ink: #f7f3ef; --ink-2: #bdb5ad; --ink-3: #847c74; --on-accent: #1a0f0a;
+    --mint: #2dd4bf; --iris: #ff8a65; --peach: #ffb454; --rose: #f472b6; --gold: #fcd34d; --green: #4ade80;
+    --accent-grad: linear-gradient(135deg, #ffb454 0%, #ff7a59 45%, #f0568c 100%);
+    --glow: 0 0 0 1px rgba(255,138,101,.45), 0 14px 40px -14px rgba(240,86,140,.45);
     --shadow: 0 1px 0 rgba(255,255,255,.05) inset, 0 30px 60px -30px rgba(0,0,0,.7);
-    --spot: rgba(139,140,248,.16);
+    --spot: rgba(255,138,101,.14);
     color-scheme: dark;
   }
   :root[data-theme="light"] {
-    --bg: #f5f6fa; --bg-2: #eceef5; --surface: rgba(255,255,255,.72); --surface-2: #ffffff; --surface-solid: #ffffff;
-    --line: rgba(15,23,42,.08); --line-2: rgba(15,23,42,.15);
-    --ink: #0b1220; --ink-2: #475467; --ink-3: #8a94a6; --on-accent: #ffffff;
-    --mint: #0d9488; --iris: #5b5bd6; --peach: #ea580c; --rose: #e11d48; --gold: #d97706; --green: #16a34a;
-    --accent-grad: linear-gradient(135deg, #14b8a6 0%, #6366f1 55%, #a855f7 100%);
-    --glow: 0 0 0 1px rgba(99,102,241,.35), 0 14px 36px -14px rgba(99,102,241,.4);
-    --shadow: 0 1px 2px rgba(15,23,42,.04), 0 24px 48px -28px rgba(15,23,42,.25);
-    --spot: rgba(99,102,241,.08);
+    --bg: #faf6f2; --bg-2: #f2ebe4; --surface: rgba(255,255,255,.75); --surface-2: #ffffff; --surface-solid: #ffffff;
+    --line: rgba(41,24,12,.09); --line-2: rgba(41,24,12,.16);
+    --ink: #1c1410; --ink-2: #5c4f46; --ink-3: #8e8076; --on-accent: #ffffff;
+    --mint: #0f766e; --iris: #d9480f; --peach: #c2410c; --rose: #be185d; --gold: #b45309; --green: #15803d;
+    --accent-grad: linear-gradient(135deg, #ea580c 0%, #dc2626 50%, #be185d 100%);
+    --glow: 0 0 0 1px rgba(217,72,15,.3), 0 14px 36px -14px rgba(190,24,93,.35);
+    --shadow: 0 1px 2px rgba(41,24,12,.05), 0 24px 48px -28px rgba(41,24,12,.25);
+    --spot: rgba(217,72,15,.07);
     color-scheme: light;
   }
 
@@ -67,9 +68,9 @@
   /* Ambient background */
   .aurora { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
   .aurora span { position: absolute; width: 62vmax; height: 62vmax; border-radius: 50%; filter: blur(100px); opacity: .2; animation: drift 30s ease-in-out infinite alternate; }
-  .aurora span:nth-child(1) { background: #14b8a6; top: -34vmax; left: -18vmax; }
-  .aurora span:nth-child(2) { background: #6366f1; top: -30vmax; right: -24vmax; animation-duration: 36s; animation-delay: -9s; }
-  .aurora span:nth-child(3) { background: #a855f7; top: 24vmax; left: 34vmax; opacity: .1; animation-duration: 44s; animation-delay: -18s; }
+  .aurora span:nth-child(1) { background: #ff7a59; top: -34vmax; left: -18vmax; }
+  .aurora span:nth-child(2) { background: #f0568c; top: -30vmax; right: -24vmax; animation-duration: 36s; animation-delay: -9s; }
+  .aurora span:nth-child(3) { background: #2dd4bf; top: 24vmax; left: 34vmax; opacity: .08; animation-duration: 44s; animation-delay: -18s; }
   :root[data-theme="light"] .aurora span { opacity: .13; }
   .grid-bg { position: fixed; inset: 0; z-index: 0; pointer-events: none; background-image: linear-gradient(var(--line) 1px, transparent 1px), linear-gradient(90deg, var(--line) 1px, transparent 1px); background-size: 56px 56px; mask-image: radial-gradient(ellipse 80% 50% at 50% 0%, #000 20%, transparent 75%); -webkit-mask-image: radial-gradient(ellipse 80% 50% at 50% 0%, #000 20%, transparent 75%); opacity: .5; }
   .grain { position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: .04; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>"); }
@@ -94,7 +95,7 @@
   .eyebrow svg { color: var(--mint); }
   h1 { margin: 16px 0 14px; max-width: 17em; font-size: clamp(34px, 5.3vw, 66px); font-weight: 650; line-height: 1.03; letter-spacing: -.035em; }
   h1 .num { background: var(--accent-grad); -webkit-background-clip: text; background-clip: text; color: transparent; font-variant-numeric: tabular-nums; }
-  h1 em { font-family: var(--serif); font-style: italic; font-weight: 400; padding-right: .06em; background: linear-gradient(90deg, var(--mint), var(--iris), #c084fc, var(--mint)); background-size: 300% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; animation: flow 9s linear infinite; }
+  h1 em { font-family: var(--serif); font-style: italic; font-weight: 400; padding-right: .06em; background: linear-gradient(90deg, var(--peach), var(--iris), var(--rose), var(--peach)); background-size: 300% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; animation: flow 9s linear infinite; }
   .lede { max-width: 62ch; margin: 0 0 30px; color: var(--ink-2); font-size: clamp(15px, 1.35vw, 17px); }
   .stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
   .stat { position: relative; padding: 18px 18px 16px; border-radius: 18px; border: 1px solid var(--line); background: var(--surface); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); transition: transform .35s var(--spring), border-color .25s; }
@@ -363,6 +364,51 @@
   .ad-mini { margin-top: 22px; padding-top: 14px; border-top: 1px solid var(--line); }
   .ad-mini .adtext { margin-top: 10px; }
 
+  /* Phone toolbar controls (only shown by the phone layout further down) */
+  .m-btn, .m-cancel { display: none; position: relative; align-items: center; justify-content: center; gap: 6px; height: 38px; min-width: 38px; padding: 0 12px; border-radius: 12px; border: 1px solid var(--line); background: var(--surface); font-size: 13px; font-weight: 600; color: var(--ink); cursor: pointer; transition: border-color .2s, background .2s, transform .25s var(--spring); }
+  .m-btn:active { transform: scale(.95); }
+  .m-search-btn { width: 38px; padding: 0; }
+  .m-btn svg { width: 17px; height: 17px; }
+  .m-filter-btn.on { border-color: color-mix(in srgb, var(--iris) 60%, transparent); background: color-mix(in srgb, var(--iris) 12%, transparent); }
+  .m-filter-btn b { position: absolute; top: -6px; right: -6px; min-width: 19px; height: 19px; padding: 0 5px; border-radius: 99px; background: var(--accent-grad); color: #1a0f0a; font-size: 11px; font-weight: 700; line-height: 19px; text-align: center; }
+  :root[data-theme="light"] .m-filter-btn b { color: #fff; }
+  .m-cancel { padding: 0 6px; border: 0; background: none; color: var(--iris); }
+  .q-clear { display: grid; place-items: center; flex: none; width: 26px; height: 26px; padding: 0; border: 0; border-radius: 50%; background: var(--surface-2); color: var(--ink-2); cursor: pointer; }
+  .q-clear svg { width: 13px; height: 13px; }
+  .search input::-webkit-search-cancel-button { display: none; }
+
+  /* Filters sheet (phones) */
+  .fsheet { position: fixed; inset: auto 0 0 0; z-index: 70; display: flex; flex-direction: column; max-height: 84vh; border-radius: 24px 24px 0 0; border-top: 1px solid var(--line-2); background: var(--surface-solid); box-shadow: 0 -24px 60px -24px rgba(0,0,0,.6); transform: translateY(105%); visibility: hidden; transition: transform .45s var(--ease), visibility 0s linear .45s; }
+  .fsheet.open { transform: none; visibility: visible; transition: transform .45s var(--ease); }
+  .fsheet:focus { outline: none; }
+  .fs-head { position: relative; display: flex; align-items: center; justify-content: space-between; padding: 24px 20px 6px; }
+  .fs-head h3 { margin: 0; font-size: 19px; letter-spacing: -.01em; }
+  .fs-head .linkish { margin: 0; padding: 8px 0; font-size: 14px; }
+  .fs-body { overflow: auto; overscroll-behavior: contain; padding: 0 20px 14px; }
+  .fs-group { margin-top: 18px; }
+  .fs-group h4 { margin: 0 0 8px; font-size: 12px; font-weight: 650; letter-spacing: .07em; text-transform: uppercase; color: var(--ink-3); }
+  .fs-pills { display: flex; flex-wrap: wrap; gap: 8px; }
+  .fs-pill { height: 42px; padding: 0 15px; border-radius: 12px; border: 1px solid var(--line); background: var(--surface-2); font-size: 14px; font-weight: 600; color: var(--ink-2); cursor: pointer; transition: color .2s, border-color .2s, background .2s; }
+  .fs-pill b { margin-left: 6px; font-size: 12px; color: var(--ink-3); }
+  .fs-pill[aria-pressed="true"] { color: var(--ink); border-color: color-mix(in srgb, var(--iris) 65%, transparent); background: color-mix(in srgb, var(--iris) 15%, transparent); }
+  .fs-row { display: flex; align-items: center; gap: 12px; width: 100%; min-height: 52px; padding: 0 2px; border: 0; border-bottom: 1px solid var(--line); background: none; font-size: 15px; text-align: left; cursor: pointer; }
+  .fs-row:last-child { border-bottom: 0; }
+  .fs-row > svg { width: 18px; height: 18px; color: var(--iris); }
+  .fs-row > span { flex: 1; }
+  .switch { position: relative; flex: none; width: 46px; height: 28px; border-radius: 99px; background: var(--line-2); transition: background .25s; }
+  .switch::after { content: ""; position: absolute; top: 3px; left: 3px; width: 22px; height: 22px; border-radius: 50%; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,.3); transition: transform .3s var(--spring); }
+  .fs-row[aria-checked="true"] .switch { background: var(--iris); }
+  .fs-row[aria-checked="true"] .switch::after { transform: translateX(18px); }
+  .radio { flex: none; width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--line-2); transition: border-color .2s, box-shadow .2s; }
+  .fs-row[aria-checked="true"] .radio { border-color: var(--iris); box-shadow: inset 0 0 0 4px var(--surface-solid), inset 0 0 0 11px var(--iris); }
+  .fs-foot { padding: 12px 20px calc(12px + env(safe-area-inset-bottom)); border-top: 1px solid var(--line); }
+  .fs-foot .btn { width: 100%; height: 50px; justify-content: center; font-size: 15px; }
+
+  /* Back to top */
+  .to-top { position: fixed; right: 16px; bottom: calc(18px + env(safe-area-inset-bottom)); z-index: 50; display: grid; place-items: center; width: 48px; height: 48px; border-radius: 50%; border: 1px solid var(--line-2); background: var(--surface-solid); color: var(--ink); box-shadow: 0 12px 30px -10px rgba(0,0,0,.55); cursor: pointer; opacity: 0; pointer-events: none; transform: translateY(16px) scale(.9); transition: opacity .25s, transform .35s var(--spring); }
+  .to-top.show { opacity: 1; pointer-events: auto; transform: none; }
+  .to-top svg { width: 20px; height: 20px; }
+
   /* Refresh button and toast messages */
   [hidden] { display: none !important; }
   .refresh-btn { display: inline-flex; align-items: center; gap: 8px; height: 36px; padding: 0 14px 0 12px; border-radius: 10px; border: 1px solid var(--line); background: var(--surface); font-size: 13px; font-weight: 600; cursor: pointer; white-space: nowrap; transition: transform .3s var(--spring), border-color .2s, background .2s; }
@@ -423,6 +469,35 @@
     .card { grid-template-columns: 40px minmax(0, 1fr) auto; padding: 13px; }
     .avatar { width: 40px; height: 40px; font-size: 13.5px; border-radius: 12px; }
   }
+  /* Phones: one slim toolbar row (search · categories · filters) that slides away while scrolling down */
+  @media (max-width: 960px) {
+    .topbar { position: relative; }
+    .hero { padding: 20px 16px 14px; }
+    h1 { margin: 10px 0 8px; font-size: clamp(27px, 7.6vw, 40px); line-height: 1.08; }
+    .lede { margin-bottom: 14px; font-size: 14px; }
+    .srcwrap, .grid-bg, .grain { display: none; }
+    .aurora span { animation: none; filter: blur(70px); }
+    .toolbar { top: 0; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 8px; padding: 8px 12px; transition: transform .32s var(--ease), border-color .3s, box-shadow .3s; will-change: transform; }
+    .toolbar.hide { transform: translateY(-110%); }
+    .toolbar .seg, .toolbar .chips, .toolbar .search { display: none; }
+    .toolbar .m-btn { display: inline-flex; }
+    .toolbar .cats { flex-basis: auto; min-width: 0; gap: 6px; -webkit-mask-image: linear-gradient(90deg, #000 86%, transparent); mask-image: linear-gradient(90deg, #000 86%, transparent); }
+    .cat { height: 38px; padding: 0 12px; gap: 7px; font-size: 13px; }
+    .toolbar.searching .cats, .toolbar.searching .m-btn { display: none; }
+    .toolbar.searching .search { display: flex; grid-column: 1 / 3; height: 40px; }
+    .toolbar.searching .m-cancel { display: inline-flex; }
+    .search kbd { display: none; }
+    .workspace { padding-top: 12px; }
+  }
+  @media (max-width: 560px) {
+    .eyebrow, .lede { display: none; }
+    h1 { margin-top: 0; }
+    .stats { gap: 8px; }
+    .stat { padding: 11px 12px; border-radius: 14px; }
+    .stat .ico, .stat .s { display: none; }
+    .stat .n { margin-top: 0; font-size: 24px; }
+    .stat .l { margin-top: 3px; font-size: 12px; font-weight: 600; color: var(--ink-2); }
+  }
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }
     .aurora { display: none; }
@@ -454,6 +529,8 @@
   <symbol id="i-back" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></symbol>
   <symbol id="i-car" viewBox="0 0 24 24"><path d="M19 17h2a1 1 0 0 0 1-1v-3c0-.9-.7-1.7-1.5-1.9L16 10l-2.2-2.3A2.5 2.5 0 0 0 12 7H5a1.6 1.6 0 0 0-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4a1 1 0 0 0 1 1h2"/><circle cx="7" cy="17" r="2"/><path d="M9 17h6"/><circle cx="17" cy="17" r="2"/></symbol>
   <symbol id="i-train" viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="14" rx="3"/><path d="M5 10h14M12 3v7M8 21l2-4M16 21l-2-4"/><circle cx="9" cy="13.5" r=".6"/><circle cx="15" cy="13.5" r=".6"/></symbol>
+  <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 6h9M17 6h3M4 12h3M11 12h9M4 18h11M19 18h1"/><circle cx="15" cy="6" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="17" cy="18" r="2"/></symbol>
+  <symbol id="i-up" viewBox="0 0 24 24"><path d="m6 15 6-6 6 6"/></symbol>
   <symbol id="i-hospital" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><path d="M12 8v8M8 12h8"/></symbol>
   <symbol id="i-file" viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></symbol>
   <symbol id="i-radar" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><path d="m12 12 6-6"/><circle cx="12" cy="12" r="1"/></symbol>
@@ -488,8 +565,11 @@
 
 <div id="sentinel"></div>
 <div class="toolbar" id="toolbar">
+  <button class="m-btn m-search-btn" id="m-search" type="button" aria-label="Search roles"><svg class="i" aria-hidden="true"><use href="#i-search"/></svg></button>
   <div class="cats" id="cats" role="group" aria-label="Role type"></div>
-  <label class="search"><svg class="i" aria-hidden="true"><use href="#i-search"/></svg><input id="q" type="search" placeholder="Search roles, employers or suburbs" autocomplete="off" aria-label="Search roles"><kbd>/</kbd></label>
+  <label class="search"><svg class="i" aria-hidden="true"><use href="#i-search"/></svg><input id="q" type="search" enterkeyhint="search" placeholder="Search roles, employers or suburbs" autocomplete="off" aria-label="Search roles"><button class="q-clear" id="q-clear" type="button" aria-label="Clear search" hidden><svg class="i" aria-hidden="true"><use href="#i-x"/></svg></button><kbd>/</kbd></label>
+  <button class="m-cancel" id="m-cancel" type="button">Cancel</button>
+  <button class="m-btn m-filter-btn" id="m-filter" type="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="fsheet"><svg class="i" aria-hidden="true"><use href="#i-sliders"/></svg><span>Filters</span><b id="m-filter-count" hidden></b></button>
   <div class="seg" id="seg" role="group" aria-label="Work type">
     <span class="seg-pill" aria-hidden="true"></span>
     <button class="active" data-type="">All<b></b></button>
@@ -523,6 +603,12 @@
   <aside class="detail" id="detail" aria-live="polite"></aside>
 </main>
 <div class="scrim" id="scrim"></div>
+<div class="fsheet" id="fsheet" role="dialog" aria-modal="true" aria-labelledby="fs-title" tabindex="-1">
+  <div class="fs-head"><span class="grab" aria-hidden="true"></span><h3 id="fs-title">Filters</h3><button class="linkish" type="button" data-clear>Clear all</button></div>
+  <div class="fs-body" id="fs-body"></div>
+  <div class="fs-foot"><button class="btn primary" type="button" data-fdone>Show roles</button></div>
+</div>
+<button class="to-top" id="to-top" type="button" aria-label="Back to top"><svg class="i" aria-hidden="true"><use href="#i-up"/></svg></button>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 <footer class="foot">EP Radar · built on your computer from Seek, Indeed, LinkedIn and hospital careers sites</footer>
 
@@ -727,6 +813,7 @@ function renderList() {
   if (!isMobile()) renderDetail(byId.get(state.selected));
   renderSegCounts();
   renderCats();
+  syncFilterSheet();
 }
 // Category tabs (All · EP · OT · ...), each counting the roles that match the other filters.
 function renderCats() {
@@ -736,6 +823,11 @@ function renderCats() {
   el.innerHTML = [{ id: "", label: "All roles" }, ...CATS]
     .map((c) => `<button class="cat${state.cat === c.id ? " active" : ""}" data-cat="${esc(c.id)}"${c.color ? ` style="--c:${c.color}"` : ""}><i></i>${esc(c.label)}<b>${count(c.id)}</b></button>`)
     .join("");
+  // On phones the pills scroll sideways: keep the chosen one in view.
+  const active = el.querySelector(".cat.active");
+  if (active && (active.offsetLeft < el.scrollLeft || active.offsetLeft + active.offsetWidth > el.scrollLeft + el.clientWidth)) {
+    el.scrollLeft = Math.max(0, active.offsetLeft - (el.clientWidth - active.offsetWidth) / 2);
+  }
 }
 $("#cats").addEventListener("click", (e) => {
   const b = e.target.closest("[data-cat]");
@@ -1064,7 +1156,7 @@ function refreshCard(id) {
   old.replaceWith(fresh);
 }
 function clearFilters() {
-  state.q = ""; $("#q").value = "";
+  state.q = ""; $("#q").value = ""; updateSearchUi(); $("#toolbar").classList.remove("searching");
   state.type = ""; $$("#seg button").forEach((b) => b.classList.toggle("active", !b.dataset.type));
   state.flags.clear(); $$(".chip[data-flag]").forEach((c) => c.setAttribute("aria-pressed", "false"));
   renderList();
@@ -1088,10 +1180,18 @@ document.addEventListener("click", (e) => {
     refreshCard(id);
     return;
   }
+  const typeBtn = t.closest("[data-ftype]");
+  if (typeBtn) return setType(typeBtn.dataset.ftype);
+  const flagBtn = t.closest("[data-fflag]");
+  if (flagBtn) return toggleFlag(flagBtn.dataset.fflag);
+  const sortBtn = t.closest("[data-fsort]");
+  if (sortBtn) return setSort(sortBtn.dataset.fsort);
+  if (t.closest("[data-fdone]")) return closeFilters();
   if (t.closest("[data-refresh]")) return refresh();
   if (t.closest("[data-toast-close]")) return hideToast();
   if (t.closest("[data-toast-act]")) return toastAction?.();
   if (t.closest("[data-clear]")) return clearFilters();
+  if (t.closest("#scrim") && $("#fsheet").classList.contains("open")) return closeFilters();
   if (t.closest("[data-close]") || t.closest("#scrim")) return closeSheet();
   const c = t.closest(".card");
   if (c) select(c.dataset.id);
@@ -1107,28 +1207,29 @@ document.addEventListener("pointermove", (e) => {
 
 let searchTimer;
 $("#q").addEventListener("input", (e) => {
+  updateSearchUi();
   clearTimeout(searchTimer);
   searchTimer = setTimeout(() => { state.q = e.target.value; renderList(); }, 120);
 });
-$("#seg").addEventListener("click", (e) => {
-  const b = e.target.closest("button");
-  if (!b) return;
-  $$("#seg button").forEach((x) => x.classList.toggle("active", x === b));
-  state.type = b.dataset.type;
-  renderList();
-});
-$$(".chip[data-flag]").forEach((chip) => chip.addEventListener("click", () => {
-  const f = chip.dataset.flag;
-  state.flags.has(f) ? state.flags.delete(f) : state.flags.add(f);
-  chip.setAttribute("aria-pressed", String(state.flags.has(f)));
-  renderList();
-}));
-$("#sort").addEventListener("change", (e) => { state.sort = e.target.value; renderList(); });
+$("#q").addEventListener("keydown", (e) => { if (e.key === "Enter") e.target.blur(); }); // hides the phone keyboard
+$("#q-clear").addEventListener("click", () => { $("#q").value = ""; state.q = ""; updateSearchUi(); renderList(); $("#q").focus(); });
+$("#m-search").addEventListener("click", openSearch);
+$("#m-cancel").addEventListener("click", closeSearch);
+$("#m-filter").addEventListener("click", openFilters);
+$("#seg").addEventListener("click", (e) => { const b = e.target.closest("button"); if (b) setType(b.dataset.type); });
+$$(".chip[data-flag]").forEach((chip) => chip.addEventListener("click", () => toggleFlag(chip.dataset.flag)));
+$("#sort").addEventListener("change", (e) => setSort(e.target.value));
 
 document.addEventListener("keydown", (e) => {
   const typing = document.activeElement?.matches("input, select, textarea");
-  if (e.key === "/" && !typing) { e.preventDefault(); $("#q").focus(); return; }
-  if (e.key === "Escape") { if ($("#detail").classList.contains("open")) closeSheet(); else if (typing) document.activeElement.blur(); return; }
+  if (e.key === "/" && !typing) { e.preventDefault(); isMobile() ? openSearch() : $("#q").focus(); return; }
+  if (e.key === "Escape") {
+    if ($("#fsheet").classList.contains("open")) closeFilters();
+    else if ($("#detail").classList.contains("open")) closeSheet();
+    else if ($("#toolbar").classList.contains("searching")) closeSearch();
+    else if (typing) document.activeElement.blur();
+    return;
+  }
   if (typing || !state.ids.length) return;
   const down = e.key === "ArrowDown" || e.key === "j";
   const up = e.key === "ArrowUp" || e.key === "k";
@@ -1156,6 +1257,7 @@ function layout() {
   // Widening from phone to desktop: the side panel is always visible there, so fill it.
   if (!isMobile()) {
     closeSheet();
+    hideFilters();
     if (!state.selected && state.ids.length) state.selected = state.ids[0];
     if (state.selected && state.rendered !== state.selected) {
       $$(".card").forEach((c) => { const on = c.dataset.id === state.selected; c.classList.toggle("active", on); c.setAttribute("aria-selected", on); });
@@ -1230,9 +1332,126 @@ async function checkForUpdate() {
   } catch {}
 }
 
+/* ---------- Filters, search and scrolling (built for phones, shared with desktop) ---------- */
+const FLAGS = [
+  ["hospital", "hospital", "Hospital roles only"],
+  ["new", "sparkle", "Listed this week"],
+  ["saved", "star", "Saved roles"],
+  ["closed", "history", "Include roles no longer listed"],
+];
+const TYPES = [["", "Any"], ["full", "Full time"], ["part", "Part time"], ["casual", "Casual"], ["temp", "Contract"]];
+
+function setType(type) {
+  state.type = type;
+  $$("#seg button").forEach((x) => x.classList.toggle("active", x.dataset.type === type));
+  renderList();
+}
+function toggleFlag(flag) {
+  state.flags.has(flag) ? state.flags.delete(flag) : state.flags.add(flag);
+  $$(`.chip[data-flag="${flag}"]`).forEach((c) => c.setAttribute("aria-pressed", String(state.flags.has(flag))));
+  renderList();
+}
+function setSort(sort) {
+  state.sort = sort;
+  $("#sort").value = sort;
+  renderList();
+}
+
+function renderFilterSheet() {
+  const sorts = [...$("#sort").options].map((o) => [o.value, o.textContent]);
+  $("#fs-body").innerHTML = `
+    <div class="fs-group"><h4>Work type</h4><div class="fs-pills">${TYPES.map(([v, label]) => `<button class="fs-pill" type="button" data-ftype="${v}">${label}<b></b></button>`).join("")}</div></div>
+    <div class="fs-group"><h4>Show</h4>${FLAGS.map(([f, ic, label]) => `<button class="fs-row" type="button" role="switch" data-fflag="${f}">${icon(ic)}<span>${label}</span><i class="switch" aria-hidden="true"></i></button>`).join("")}</div>
+    <div class="fs-group"><h4>Sort by</h4><div role="radiogroup" aria-label="Sort by">${sorts.map(([v, label]) => `<button class="fs-row" type="button" role="radio" data-fsort="${v}"><span>${esc(label)}</span><i class="radio" aria-hidden="true"></i></button>`).join("")}</div></div>`;
+}
+// Keeps the filters sheet and the Filters button's badge in step with the current filters.
+function syncFilterSheet() {
+  const base = DATA.jobs.filter((j) => passesFilters(j));
+  $$("[data-ftype]").forEach((b) => {
+    b.setAttribute("aria-pressed", String(state.type === b.dataset.ftype));
+    b.querySelector("b").textContent = base.filter((j) => matchesType(j, b.dataset.ftype)).length;
+  });
+  $$("[data-fflag]").forEach((b) => b.setAttribute("aria-checked", String(state.flags.has(b.dataset.fflag))));
+  $$("[data-fsort]").forEach((b) => b.setAttribute("aria-checked", String(state.sort === b.dataset.fsort)));
+  $("[data-fdone]").textContent = `Show ${state.ids.length} role${state.ids.length === 1 ? "" : "s"}`;
+  const active = (state.type ? 1 : 0) + state.flags.size;
+  $("#m-filter-count").hidden = !active;
+  $("#m-filter-count").textContent = active;
+  $("#m-filter").classList.toggle("on", active > 0);
+}
+// The sheet adds a history entry, so the phone's back gesture closes it.
+function openFilters() {
+  syncFilterSheet();
+  $("#fsheet").classList.add("open");
+  $("#scrim").classList.add("on");
+  document.body.classList.add("locked");
+  $("#m-filter").setAttribute("aria-expanded", "true");
+  if (!history.state?.epFilters) history.pushState({ epFilters: true }, "");
+  setTimeout(() => $("#fsheet").focus({ preventScroll: true }), 300);
+}
+function hideFilters() {
+  if (!$("#fsheet").classList.contains("open")) return;
+  $("#fsheet").classList.remove("open");
+  $("#m-filter").setAttribute("aria-expanded", "false");
+  if (!$("#detail").classList.contains("open")) {
+    $("#scrim").classList.remove("on");
+    document.body.classList.remove("locked");
+  }
+}
+function closeFilters() {
+  if (history.state?.epFilters) history.back(); // popstate hides it
+  else hideFilters();
+}
+addEventListener("popstate", hideFilters);
+
+function updateSearchUi() { $("#q-clear").hidden = !$("#q").value; }
+function openSearch() {
+  $("#toolbar").classList.add("searching");
+  $("#toolbar").classList.remove("hide");
+  $("#q").focus();
+}
+function closeSearch() {
+  $("#toolbar").classList.remove("searching");
+  $("#q").blur();
+  if ($("#q").value) {
+    $("#q").value = "";
+    state.q = "";
+    updateSearchUi();
+    renderList();
+  }
+}
+
+// Phones: the toolbar slides away while scrolling down the list and comes back on the way up.
+let lastY = scrollY;
+let turnY = scrollY;
+let lastDir = 0;
+let scrollQueued = false;
+addEventListener("scroll", () => {
+  if (scrollQueued) return;
+  scrollQueued = true;
+  requestAnimationFrame(() => {
+    scrollQueued = false;
+    const y = scrollY;
+    const bar = $("#toolbar");
+    const dir = Math.sign(y - lastY);
+    if (dir && dir !== lastDir) { turnY = lastY; lastDir = dir; }
+    const docked = y > $("#sentinel").offsetTop + 60;
+    if (!isMobile() || !docked || bar.classList.contains("searching")) bar.classList.remove("hide");
+    else if (y - turnY > 24) bar.classList.add("hide");
+    else if (turnY - y > 24) bar.classList.remove("hide");
+    lastY = y;
+    $("#to-top").classList.toggle("show", y > 900);
+  });
+}, { passive: true });
+$("#to-top").addEventListener("click", () => {
+  $("#toolbar").classList.remove("hide");
+  scrollTo({ top: 0, behavior: reduceMotion ? "auto" : "smooth" });
+});
+
 setThemeIcon();
 renderHero();
 renderLive();
+renderFilterSheet();
 renderList();
 layout();
 setInterval(renderLive, 60000);

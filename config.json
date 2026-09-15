@@ -59,7 +59,7 @@
       "short": "Exercise",
       "plural": "exercise science & rehab roles",
       "person": "an Exercise Scientist",
-      "color": "#fbbf24",
+      "color": "#60a5fa",
       "searchTerms": ["exercise scientist", "exercise therapist", "exercise rehabilitation", "strength and conditioning coach"],
       "titlePatterns": ["exercise scien", "exercise therap", "exercise rehab", "strength (and|&) conditioning", "kinesiolog"],
       "mentionPatterns": ["exercise scien"]
@@ -70,7 +70,7 @@
       "short": "Pilates",
       "plural": "Pilates roles",
       "person": "a Pilates instructor",
-      "color": "#f472b6",
+      "color": "#e879f9",
       "searchTerms": ["clinical pilates", "pilates instructor", "reformer pilates"],
       "titlePatterns": ["pilates"],
       "mentionPatterns": ["pilates"]
