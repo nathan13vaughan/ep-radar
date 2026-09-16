@@ -117,7 +117,7 @@ ${job.description || job.summary || "(no description available)"}
 </ad>`)
     .join("\n\n");
 
-  const prompt = `Below are ${jobs.length} job ads for allied health and exercise roles (exercise physiology, occupational therapy, exercise science, Pilates). The reader is deciding which to apply for. For each ad, add one entry to "jobs" with its ref and these facts.
+  const prompt = `Below are ${jobs.length} job ads for allied health and exercise roles (exercise physiology, occupational rehabilitation, exercise science, Pilates). The reader is deciding which to apply for. For each ad, add one entry to "jobs" with its ref and these facts.
 
 ${STYLE}
 
@@ -143,7 +143,7 @@ export async function researchCompany(company, location, cfg, person = "an allie
   const prompt = `I'm ${person} in Melbourne, Australia, considering a job with "${company}" (${location}).
 
 Use web search, and fetch pages where useful, to find out:
-1. What employees say about working there: ratings on SEEK, Indeed and Glassdoor (Australian sites), and the most common praise and complaints, especially from allied health staff (exercise physiologists, physios, OTs).
+1. What employees say about working there: ratings on SEEK, Indeed and Glassdoor (Australian sites), and the most common praise and complaints, especially from allied health staff (exercise physiologists, physios, rehabilitation consultants).
 2. How it hires allied health staff: the steps, interview format, how long it takes, and typical questions. For a public health service, the Victorian public health recruitment process applies.
 
 If "${company}" is a recruitment agency or a parent brand, research the hospital or clinic it's hiring for if that's clear, otherwise the brand. About 4–6 searches is usually enough.

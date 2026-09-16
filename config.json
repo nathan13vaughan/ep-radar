@@ -37,21 +37,26 @@
       "mentionPatterns": ["exercise physiolog"]
     },
     {
-      "id": "ot",
-      "label": "Occupational Therapy",
-      "short": "OT",
-      "plural": "Occupational Therapist roles",
-      "person": "an Occupational Therapist",
+      "id": "occrehab",
+      "label": "Occupational Rehab",
+      "short": "Occ Rehab",
+      "plural": "occupational rehab roles",
+      "person": "a workplace rehabilitation consultant",
       "color": "#a78bfa",
       "searchTerms": [
-        "occupational therapist",
-        "occupational therapy",
-        "occupational therapist hospital",
-        "graduate occupational therapist",
-        "occupational therapist grade 2"
+        "occupational rehabilitation",
+        "occupational rehabilitation consultant",
+        "workplace rehabilitation consultant",
+        "rehabilitation consultant",
+        "return to work coordinator",
+        "injury management consultant",
+        "vocational rehabilitation"
       ],
-      "titlePatterns": ["occupational therap", "\\bOTs?\\b"],
-      "mentionPatterns": ["occupational therap"]
+      "titlePatterns": [
+        "occupational rehab", "workplace rehab", "vocational rehab", "rehab(ilitation)? consultant",
+        "rehab(ilitation)? coordinator", "return to work", "\\bRTW\\b", "injury management", "functional capacity"
+      ],
+      "mentionPatterns": ["occupational rehab", "workplace rehab", "vocational rehab", "return to work"]
     },
     {
       "id": "exercise",
@@ -126,8 +131,8 @@
     { "name": "Epworth HealthCare", "type": "smartrecruiters", "company": "Epworth" },
     { "name": "Ramsay Health Care", "type": "smartrecruiters", "company": "RamsayHealthCare1", "query": "region=Victoria" },
     { "name": "Calvary Health Care", "type": "pageup", "instance": "1106", "locationMatch": "caulfield|kooyong|melbourne|bethlehem|\\bVIC\\b" },
-    { "name": "Healthscope", "type": "taleo", "host": "careers.healthscope.com.au", "keywords": ["exercise physiologist", "exercise physiology", "occupational therapist", "exercise scientist", "pilates"], "locationMatch": "melbourne|\\bVIC\\b|victoria" },
-    { "name": "Careers.Vic", "type": "careersvic", "keywords": ["exercise physiologist", "occupational therapist", "exercise scientist"], "locationMatch": "melbourne" }
+    { "name": "Healthscope", "type": "taleo", "host": "careers.healthscope.com.au", "keywords": ["exercise physiologist", "exercise physiology", "rehabilitation consultant", "exercise scientist", "pilates"], "locationMatch": "melbourne|\\bVIC\\b|victoria" },
+    { "name": "Careers.Vic", "type": "careersvic", "keywords": ["exercise physiologist", "rehabilitation consultant", "exercise scientist"], "locationMatch": "melbourne" }
   ],
   "pagesPerSearch": 5,
   "requestDelayMs": 800,

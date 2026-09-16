@@ -1,6 +1,6 @@
 # EP Job Observer
 
-Watches **Seek**, **Indeed**, **LinkedIn** and Melbourne hospitals' own careers sites for **Exercise Physiology, Occupational Therapy, Exercise Science and Pilates** roles in **Melbourne**. It notifies you when a new one appears and keeps a report with everything you'd want to know before applying. Each role is tagged with its category, and the report has a tab for each one. Hospital-based roles are tagged too.
+Watches **Seek**, **Indeed**, **LinkedIn** and Melbourne hospitals' own careers sites for **Exercise Physiology, Occupational Rehabilitation, Exercise Science and Pilates** roles in **Melbourne**. It notifies you when a new one appears and keeps a report with everything you'd want to know before applying. Each role is tagged with its category, and the report has a tab for each one. Hospital-based roles are tagged too.
 
 For each role you get:
 
@@ -90,9 +90,9 @@ Flags for `node src/index.js`: `--watch`, `--open`, `--report-only`, `--no-notif
 ## Settings (`config.json`)
 
 - `location`: where to search, written the way each site expects: `Melbourne VIC` for Seek and Indeed, and `Melbourne, Victoria, Australia` for LinkedIn. `radiusKm` sets the search distance on Indeed and LinkedIn.
-- `categories`: the kinds of role to find: Exercise Physiology, Occupational Therapy, Exercise Science and Pilates. Each has:
+- `categories`: the kinds of role to find: Exercise Physiology, Occupational Rehabilitation, Exercise Science and Pilates. Each has:
   - `searchTerms`: what's searched on each site;
-  - `titlePatterns`: which job titles belong to it (regular expressions, so `\\bOTs?\\b` matches "OT" as a word);
+  - `titlePatterns`: which job titles belong to it (regular expressions, so `\\bRTW\\b` matches "RTW" as a word);
   - `mentionPatterns`: what an ad must say for a generic title to count;
   - a `label`, a short tag and a `color` for the report.
 

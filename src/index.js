@@ -34,9 +34,9 @@ if (process.env.NTFY_TOPIC) cfg.notifications.ntfyTopic = process.env.NTFY_TOPIC
 // Every enabled role category (EP, OT, ...) contributes its search terms.
 cfg.searchTerms = [...new Set(cfg.categories.filter((c) => c.enabled !== false).flatMap((c) => c.searchTerms))];
 
-// Older saved jobs predate categories; work theirs out from the title and ad.
+// Categories always come from config.json as it is now, so saved jobs follow category changes
+// (e.g. a category that's been removed stops showing straight away).
 const withCategories = (job) => {
-  if (job.categories) return job;
   const categories = categoriesFor(job, cfg);
   return { ...job, categories, excluded: !categories.length };
 };
@@ -186,7 +186,7 @@ async function runOnce(db) {
     try {
       // Every role the report shows as open (seen in the last 3 days, not just this run), newest
       // first so new roles get a map straight away if the lookup limit is reached.
-      const open = db.allJobs()
+      const open = db.allJobs().map(withCategories)
         .filter((j) => !j.excluded && Date.now() - Date.parse(j.lastSeen) < 3 * 864e5)
         .sort((a, b) => b.firstSeen.localeCompare(a.firstSeen));
       await refreshPlaces(open, db, cfg, log);

@@ -42,7 +42,7 @@ export function categoriesFor(job, cfg) {
   return broadTitleMatch(job.title, cfg) ? matching(job.description ?? "", cfg, "mentionRe") : [];
 }
 
-// "an Occupational Therapist" etc., for Claude's employer research.
+// "an Exercise Physiologist" etc., for Claude's employer research.
 export const roleFor = (job, cfg) => categories(cfg).find((c) => c.id === job.categories?.[0])?.person ?? "an allied health professional";
 
 // Heuristic evidence that a role is hospital-based. Used on its own when AI is off,
